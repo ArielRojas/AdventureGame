@@ -173,7 +173,7 @@ ________                                       __________        .__  .__      _
             {
                 case 1:
                     GetLocation(0).ShowLocationInformation();
-                    flag = ConfirmationQuestionWithNo(GetLocation(0).NonPlayerCharacter.Name);
+                    flag = Question.ConfirmationQuestionWithNo(GetLocation(0).NonPlayerCharacter.Name);
                     if (flag)
                     {
                         _player.IncreaseLifePoints(LifePointsByQuestion);
@@ -195,7 +195,7 @@ ________                                       __________        .__  .__      _
                 case 2:
                     GetLocation(1).ShowLocationInformation();
                     string[] options = {"Oolong", "Puar", "Ten Ten"};
-                    answer = SelectAnswer(GetLocation(1).NonPlayerCharacter.Name, options);
+                    answer = Question.SelectAnswer(GetLocation(1).NonPlayerCharacter.Name, options);
                     if (answer.Equals(Questions.Answer2))
                     {
                         _player.IncreaseLifePoints(LifePointsByQuestion);
@@ -269,7 +269,7 @@ ________                                       __________        .__  .__      _
 
                 case 4:
                     GetLocation(3).ShowLocationInformation();
-                    flag = ConfirmationQuestionWithYes(GetLocation(3).NonPlayerCharacter.Name);
+                    flag = Question.ConfirmationQuestionWithYes(GetLocation(3).NonPlayerCharacter.Name);
                     if (!flag)
                     {
                         _player.IncreaseLifePoints(LifePointsByQuestion);
@@ -291,7 +291,7 @@ ________                                       __________        .__  .__      _
                 case 5:
                     GetLocation(4).ShowLocationInformation();
                     string[] options2 = { "Resplandor Final", "Genki-dama", "Makankosappo" };
-                    answer = SelectAnswer(GetLocation(4).NonPlayerCharacter.Name, options2);
+                    answer = Question.SelectAnswer(GetLocation(4).NonPlayerCharacter.Name, options2);
                     if (answer.Equals(Questions.Answer5))
                     {
                         _player.IncreaseLifePoints(LifePointsByQuestion);
@@ -366,7 +366,7 @@ ________                                       __________        .__  .__      _
 
                 case 7:
                     GetLocation(6).ShowLocationInformation();
-                    flag = ConfirmationQuestionWithNo(GetLocation(6).NonPlayerCharacter.Name);
+                    flag = Question.ConfirmationQuestionWithNo(GetLocation(6).NonPlayerCharacter.Name);
                     if (flag)
                     {
                         _player.IncreaseLifePoints(LifePointsByQuestion);
@@ -388,7 +388,7 @@ ________                                       __________        .__  .__      _
                 case 8:
                     GetLocation(7).ShowLocationInformation();
                     string[] options3 = { "Mark", "Miguel", "Kenny" };
-                    answer = SelectAnswer(GetLocation(7).NonPlayerCharacter.Name, options3);
+                    answer = Question.SelectAnswer(GetLocation(7).NonPlayerCharacter.Name, options3);
                     if (answer.Equals(Questions.Answer7))
                     {
                         _player.IncreaseLifePoints(LifePointsByQuestion);
@@ -411,7 +411,7 @@ ________                                       __________        .__  .__      _
                 case 9:
                     GetLocation(8).ShowLocationInformation();
                     string[] options4 = { "Gohan", "Vegeta", "Goku" };
-                    answer = SelectAnswer(GetLocation(8).NonPlayerCharacter.Name, options4);
+                    answer = Question.SelectAnswer(GetLocation(8).NonPlayerCharacter.Name, options4);
                     if (answer.Equals(Questions.Answer9))
                     {
                         _player.IncreaseLifePoints(LifePointsByQuestion);
@@ -510,41 +510,6 @@ ________                                       __________        .__  .__      _
     private Location GetLocation(int position)
     {
         return _locationsList[position];
-    }
-
-    private bool ConfirmationQuestionWithNo(string question)
-    {
-        if (!AnsiConsole.Confirm($"[green]{question}[/]"))
-        {
-            AnsiConsole.MarkupLine("Muy bien, la respuesta es correcta.");
-
-            return true;
-        }
-
-        return false;
-    }
-
-    private bool ConfirmationQuestionWithYes(string question)
-    {
-        if (AnsiConsole.Confirm($"[green]{question}[/]"))
-        {
-            AnsiConsole.MarkupLine("Muy bien, la respuesta es correcta.");
-
-            return false;
-        }
-
-        return true;
-    }
-
-    private string SelectAnswer(string question, string[] options)
-    {
-        var answer = AnsiConsole.Prompt(
-            new SelectionPrompt<string>()
-                .Title($"[green]{question}[/]")
-                .AddChoices(options));
-
-        return answer;
-
     }
 
     private void IncreasePower(Item item)
