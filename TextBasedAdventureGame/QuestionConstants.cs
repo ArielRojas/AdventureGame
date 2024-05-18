@@ -1,6 +1,6 @@
 ﻿namespace TextBasedAdventureGame;
 
-public static class Questions
+public static class QuestionConstants
 {
     public const string Question1 = "¿Se llama Tao Pai Pai la persona que encontro a Goku cuando era bebe?";
     public const string Answer1 = "La persona que lo encontro se llama Son Gohan";

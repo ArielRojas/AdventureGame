@@ -7,41 +7,11 @@ internal class GameEngine
 {
     private Location[] _locationsList;
     private Player _player;
-    private const int AttackPointsByPower = 500;
-    private const int LifePointsByPower = 500;
-    private const int AttackPointsByVelocity = 200;
-    private const int LifePointsByVelocity = 100;
-    private const int LifePointsBySanity = 1000;
-    private const int LifePointsByQuestion = 200;
     private readonly TimeSpan _sleep = TimeSpan.FromMilliseconds(5000);
     private readonly TimeSpan _timeToFight = TimeSpan.FromMilliseconds(2000);
 
     private const string Introduction = "El planeta Tierra ha sido atacado por varios enemigos, ellos quieren obtener las esferas del dragon para obtener la vida eterna"
         + " y destruir todo el planeta, tu eres el unico que puede salvarnos, porfavor ayudanos a derrotarlos y salvar este planeta.";
-
-    private static readonly string _animation1 =
-                @"         " + '\n' +
-                @"         " + '\n' +
-                @"    O    " + '\n' +
-                @"   L|(   " + '\n' +
-                @"    |    " + '\n' +
-                @"   ( \   ";
-
-    private static readonly string _animation2 =
-                @"         " + '\n' +
-                @"         " + '\n' +
-                @"    o    " + '\n' +
-                @"   ((L   " + '\n' +
-                @"    |    " + '\n' +
-                @"   / )   ";
-
-    private static readonly string _animation3 =
-        @"                    o            
-           O___.   _>)           
-          L(       \|            
-           |        |            
-          / >                    
-=================================";
 
     public GameEngine()
     {
@@ -52,12 +22,12 @@ internal class GameEngine
     {
         // Level1
         Item item = new Item("Agua Ultrasagrada", ItemType.SANITY, "El agua ultrasagrada es un líquido diferente al agua corriente y sirve para incrementar la fuerza y la agilidad.");
-        QuestionCharacter questionCharacter = new QuestionCharacter(Questions.Question1, "", item);
+        QuestionCharacter questionCharacter = new QuestionCharacter(QuestionConstants.Question1, "", item);
         BuildLevelWithObstruction("Level 1", "Prepara tu camino", questionCharacter, 0);
 
         // Level2
         Item item2 = new Item("KAME HAME HA", ItemType.POWER, "gran cantidad de energía en las manos");
-        QuestionCharacter questionCharacter2 = new QuestionCharacter(Questions.Question2, "", item2);
+        QuestionCharacter questionCharacter2 = new QuestionCharacter(QuestionConstants.Question2, "", item2);
         BuildLevelWithObstruction("Level 2", "Siente el poder en tus manos", questionCharacter2, 1);
 
         // Level3
@@ -67,12 +37,12 @@ internal class GameEngine
 
         // Level4
         Item item4 = new Item("Nube Voladora", ItemType.VELOCITY, "es un objeto mágico que sirve para transportar al guerrero que lo utiliza, siempre y cuando sea de corazón puro y mente limpia.");
-        QuestionCharacter questionCharacter4 = new QuestionCharacter(Questions.Question3, "", item4);
+        QuestionCharacter questionCharacter4 = new QuestionCharacter(QuestionConstants.Question3, "", item4);
         BuildLevelWithObstruction("Level 4", "Vuela alto a una gran velocidad", questionCharacter4, 3);
 
         // Level5
         Item item5 = new Item("Kaioken", ItemType.VELOCITY, "es una técnica poderosa que permite a los guerreros aumentar su fuerza y velocidad temporalmente.");
-        QuestionCharacter questionCharacter5 = new QuestionCharacter(Questions.Question5, "", item5);
+        QuestionCharacter questionCharacter5 = new QuestionCharacter(QuestionConstants.Question5, "", item5);
         BuildLevelWithObstruction("Level 5", "Aumenta tu poder por 10", questionCharacter5, 4);
 
         // Level6
@@ -82,17 +52,17 @@ internal class GameEngine
 
         // Level7
         Item item7 = new Item("Resplandor Final", ItemType.POWER, "El ataque definitivo de Vegeta");
-        QuestionCharacter questionCharacter7 = new QuestionCharacter(Questions.Question6, "", item7);
+        QuestionCharacter questionCharacter7 = new QuestionCharacter(QuestionConstants.Question6, "", item7);
         BuildLevelWithObstruction("Level 7", "Destruccion Masiva", questionCharacter7, 6);
 
         // Level8
         Item item8 = new Item("Genki-dama", ItemType.POWER, "Es una técnica de combate de naturaleza ofensiva que requiere una parte de la energía de todas las criaturas");
-        QuestionCharacter questionCharacter8 = new QuestionCharacter(Questions.Question7, "", item8);
+        QuestionCharacter questionCharacter8 = new QuestionCharacter(QuestionConstants.Question7, "", item8);
         BuildLevelWithObstruction("Level 8", "Siente el poder de todo un planeta", questionCharacter8, 7);
 
         // Level9
         Item item9 = new Item("Super Saiyajin Fase 2", ItemType.POWER, "Es el segundo nivel que puede alcanzar un saiyajin");
-        QuestionCharacter questionCharacter9 = new QuestionCharacter(Questions.Question9, "", item9);
+        QuestionCharacter questionCharacter9 = new QuestionCharacter(QuestionConstants.Question9, "", item9);
         BuildLevelWithObstruction("Level 9", "Un nuevo poder ha despertado", questionCharacter9, 8);
 
         // Level10
@@ -173,16 +143,16 @@ ________                                       __________        .__  .__      _
             {
                 case 1:
                     GetLocation(0).ShowLocationInformation();
-                    flag = ConfirmationQuestionWithNo(GetLocation(0).NonPlayerCharacter.Name);
+                    flag = QuestionHandler.AskQuestionWithNoConfirmation(GetLocation(0).NonPlayerCharacter.Name);
                     if (flag)
                     {
-                        _player.IncreaseLifePoints(LifePointsByQuestion);
+                        _player.IncreaseLifePoints(PlayerConstants.LifePointsByQuestion);
                         _player.AddItem(GetLocation(0).NonPlayerCharacter.Item);
                         Console.WriteLine($"Felicidades, ganaste el {GetLocation(0).NonPlayerCharacter.Item.Name}");
                     }
                     else
                     {
-                        Console.WriteLine($"Incorrecto, {Questions.Answer1}");
+                        Console.WriteLine($"Incorrecto, {QuestionConstants.Answer1}");
                     }
 
                     level++;
@@ -195,17 +165,17 @@ ________                                       __________        .__  .__      _
                 case 2:
                     GetLocation(1).ShowLocationInformation();
                     string[] options = {"Oolong", "Puar", "Ten Ten"};
-                    answer = SelectAnswer(GetLocation(1).NonPlayerCharacter.Name, options);
-                    if (answer.Equals(Questions.Answer2))
+                    answer = QuestionHandler.PromptQuestionWithSimpleSelect(GetLocation(1).NonPlayerCharacter.Name, options);
+                    if (answer.Equals(QuestionConstants.Answer2))
                     {
-                        _player.IncreaseLifePoints(LifePointsByQuestion);
+                        _player.IncreaseLifePoints(PlayerConstants.LifePointsByQuestion);
                         Console.WriteLine("Felicidades!, la respuesta es correcta.");
                         _player.AddItem(GetLocation(1).NonPlayerCharacter.Item);
                         Console.WriteLine($"Ahora podras hacer un {GetLocation(1).NonPlayerCharacter.Item.Name}");
                     }
                     else
                     {
-                        Console.WriteLine($"Mala respuesta, su mejor amigo es {Questions.Answer2}");
+                        Console.WriteLine($"Mala respuesta, su mejor amigo es {QuestionConstants.Answer2}");
                     }
 
                     level++;
@@ -229,11 +199,11 @@ ________                                       __________        .__  .__      _
                     while (firstBoss.LifePoints > 0 && _player.LifePoints > 0)
                     {
                         Console.WriteLine("Ataca con todo tu poder!!!");
-                        Console.Write($"{_animation1}");
+                        Console.Write($"{AnimationStrings.animation1}");
                         Thread.Sleep(_timeToFight);
-                        Console.WriteLine($"{_animation2}");
+                        Console.WriteLine($"{AnimationStrings.animation2}");
                         Thread.Sleep(_timeToFight);
-                        Console.WriteLine($"{_animation3}");
+                        Console.WriteLine($"{AnimationStrings.animation3}");
                         Thread.Sleep(_timeToFight);
                         firstBoss.ReceiveAttack(_player.AttackPoints);
                         if (firstBoss.LifePoints <= 0)
@@ -242,7 +212,7 @@ ________                                       __________        .__  .__      _
                         }
                         Console.WriteLine($"Preparate para el ataque de {firstBoss.Name}");
                         Thread.Sleep(_timeToFight);
-                        Console.WriteLine($"{_animation3}");
+                        Console.WriteLine($"{AnimationStrings.animation3}");
                         Thread.Sleep(_timeToFight);
                         _player.ReceiveAttack(firstBoss.AttackPoints);
                         recoverLifePoints += firstBoss.AttackPoints;
@@ -269,16 +239,16 @@ ________                                       __________        .__  .__      _
 
                 case 4:
                     GetLocation(3).ShowLocationInformation();
-                    flag = ConfirmationQuestionWithYes(GetLocation(3).NonPlayerCharacter.Name);
+                    flag = QuestionHandler.AskQuestionWithYesConfirmation(GetLocation(3).NonPlayerCharacter.Name);
                     if (!flag)
                     {
-                        _player.IncreaseLifePoints(LifePointsByQuestion);
+                        _player.IncreaseLifePoints(PlayerConstants.LifePointsByQuestion);
                         _player.AddItem(GetLocation(3).NonPlayerCharacter.Item);
                         Console.WriteLine($"Felicidades, ganaste una {GetLocation(3).NonPlayerCharacter.Item.Name}");
                     }
                     else
                     {
-                        Console.WriteLine($"Incorrecto, {Questions.Answer3}");
+                        Console.WriteLine($"Incorrecto, {QuestionConstants.Answer3}");
                     }
 
                     level++;
@@ -291,17 +261,17 @@ ________                                       __________        .__  .__      _
                 case 5:
                     GetLocation(4).ShowLocationInformation();
                     string[] options2 = { "Resplandor Final", "Genki-dama", "Makankosappo" };
-                    answer = SelectAnswer(GetLocation(4).NonPlayerCharacter.Name, options2);
-                    if (answer.Equals(Questions.Answer5))
+                    answer = QuestionHandler.PromptQuestionWithSimpleSelect(GetLocation(4).NonPlayerCharacter.Name, options2);
+                    if (answer.Equals(QuestionConstants.Answer5))
                     {
-                        _player.IncreaseLifePoints(LifePointsByQuestion);
+                        _player.IncreaseLifePoints(PlayerConstants.LifePointsByQuestion);
                         _player.AddItem(GetLocation(4).NonPlayerCharacter.Item);
                         Console.WriteLine("Felicidades!, la respuesta es correcta.");
                         Console.WriteLine($"Ahora podras hacer el {GetLocation(4).NonPlayerCharacter.Item.Name}");
                     }
                     else
                     {
-                        Console.WriteLine($"Mala respuesta, La tecnica de Piccolo es {Questions.Answer5}");
+                        Console.WriteLine($"Mala respuesta, La tecnica de Piccolo es {QuestionConstants.Answer5}");
                     }
 
                     level++;
@@ -325,11 +295,11 @@ ________                                       __________        .__  .__      _
                     while (secondBoss.LifePoints > 0 && _player.LifePoints > 0)
                     {
                         Console.WriteLine("Ataca con todo tu poder!!!");
-                        Console.Write($"{_animation1}");
+                        Console.Write($"{AnimationStrings.animation1}");
                         Thread.Sleep(_timeToFight);
-                        Console.WriteLine($"{_animation2}");
+                        Console.WriteLine($"{AnimationStrings.animation2}");
                         Thread.Sleep(_timeToFight);
-                        Console.WriteLine($"{_animation3}");
+                        Console.WriteLine($"{AnimationStrings.animation3}");
                         Thread.Sleep(_timeToFight);
                         secondBoss.ReceiveAttack(_player.AttackPoints);
                         if (secondBoss.LifePoints <= 0)
@@ -338,7 +308,7 @@ ________                                       __________        .__  .__      _
                         }
                         Console.WriteLine($"Preparate para el ataque de {secondBoss.Name}");
                         Thread.Sleep(_timeToFight);
-                        Console.WriteLine($"{_animation3}");
+                        Console.WriteLine($"{AnimationStrings.animation3}");
                         Thread.Sleep(_timeToFight);
                         _player.ReceiveAttack(secondBoss.AttackPoints);
                         recoverLifePoints += secondBoss.AttackPoints;
@@ -366,16 +336,16 @@ ________                                       __________        .__  .__      _
 
                 case 7:
                     GetLocation(6).ShowLocationInformation();
-                    flag = ConfirmationQuestionWithNo(GetLocation(6).NonPlayerCharacter.Name);
+                    flag = QuestionHandler.AskQuestionWithNoConfirmation(GetLocation(6).NonPlayerCharacter.Name);
                     if (flag)
                     {
-                        _player.IncreaseLifePoints(LifePointsByQuestion);
+                        _player.IncreaseLifePoints(PlayerConstants.LifePointsByQuestion);
                         _player.AddItem(GetLocation(6).NonPlayerCharacter.Item);
                         Console.WriteLine($"Felicidades, podras usar el {GetLocation(6).NonPlayerCharacter.Item.Name}");
                     }
                     else
                     {
-                        Console.WriteLine($"Incorrecto, {Questions.Answer6}");
+                        Console.WriteLine($"Incorrecto, {QuestionConstants.Answer6}");
                     }
 
                     level++;
@@ -388,17 +358,17 @@ ________                                       __________        .__  .__      _
                 case 8:
                     GetLocation(7).ShowLocationInformation();
                     string[] options3 = { "Mark", "Miguel", "Kenny" };
-                    answer = SelectAnswer(GetLocation(7).NonPlayerCharacter.Name, options3);
-                    if (answer.Equals(Questions.Answer7))
+                    answer = QuestionHandler.PromptQuestionWithSimpleSelect(GetLocation(7).NonPlayerCharacter.Name, options3);
+                    if (answer.Equals(QuestionConstants.Answer7))
                     {
-                        _player.IncreaseLifePoints(LifePointsByQuestion);
+                        _player.IncreaseLifePoints(PlayerConstants.LifePointsByQuestion);
                         _player.AddItem(GetLocation(7).NonPlayerCharacter.Item);
                         Console.WriteLine("Felicidades!, la respuesta es correcta.");
                         Console.WriteLine($"Ahora podras hacer la {GetLocation(7).NonPlayerCharacter.Item.Name}");
                     }
                     else
                     {
-                        Console.WriteLine($"Mala respuesta, Su verdadero nombre es {Questions.Answer7}");
+                        Console.WriteLine($"Mala respuesta, Su verdadero nombre es {QuestionConstants.Answer7}");
                     }
 
                     level++;
@@ -411,17 +381,17 @@ ________                                       __________        .__  .__      _
                 case 9:
                     GetLocation(8).ShowLocationInformation();
                     string[] options4 = { "Gohan", "Vegeta", "Goku" };
-                    answer = SelectAnswer(GetLocation(8).NonPlayerCharacter.Name, options4);
-                    if (answer.Equals(Questions.Answer9))
+                    answer = QuestionHandler.PromptQuestionWithSimpleSelect(GetLocation(8).NonPlayerCharacter.Name, options4);
+                    if (answer.Equals(QuestionConstants.Answer9))
                     {
-                        _player.IncreaseLifePoints(LifePointsByQuestion);
+                        _player.IncreaseLifePoints(PlayerConstants.LifePointsByQuestion);
                         _player.AddItem(GetLocation(8).NonPlayerCharacter.Item);
                         Console.WriteLine("Felicidades!, la respuesta es correcta.");
                         Console.WriteLine($"Ahora podras convertirte en un {GetLocation(8).NonPlayerCharacter.Item.Name}");
                     }
                     else
                     {
-                        Console.WriteLine($"Mala respuesta, Fue {Questions.Answer9}");
+                        Console.WriteLine($"Mala respuesta, Fue {QuestionConstants.Answer9}");
                     }
 
                     level++;
@@ -445,11 +415,11 @@ ________                                       __________        .__  .__      _
                     while (thirdBoss.LifePoints > 0 && _player.LifePoints > 0)
                     {
                         Console.WriteLine("Ataca con todo tu poder!!!");
-                        Console.Write($"{_animation1}");
+                        Console.Write($"{AnimationStrings.animation1}");
                         Thread.Sleep(_timeToFight);
-                        Console.WriteLine($"{_animation2}");
+                        Console.WriteLine($"{AnimationStrings.animation2}");
                         Thread.Sleep(_timeToFight);
-                        Console.WriteLine($"{_animation3}");
+                        Console.WriteLine($"{AnimationStrings.animation3}");
                         Thread.Sleep(_timeToFight);
                         thirdBoss.ReceiveAttack(_player.AttackPoints);
                         if (thirdBoss.LifePoints <= 0)
@@ -458,7 +428,7 @@ ________                                       __________        .__  .__      _
                         }
                         Console.WriteLine($"Preparate para el ataque de {thirdBoss.Name}");
                         Thread.Sleep(_timeToFight);
-                        Console.WriteLine($"{_animation3}");
+                        Console.WriteLine($"{AnimationStrings.animation3}");
                         Thread.Sleep(_timeToFight);
                         _player.ReceiveAttack(thirdBoss.AttackPoints);
                         recoverLifePoints += thirdBoss.AttackPoints;
@@ -512,56 +482,21 @@ ________                                       __________        .__  .__      _
         return _locationsList[position];
     }
 
-    private bool ConfirmationQuestionWithNo(string question)
-    {
-        if (!AnsiConsole.Confirm($"[green]{question}[/]"))
-        {
-            AnsiConsole.MarkupLine("Muy bien, la respuesta es correcta.");
-
-            return true;
-        }
-
-        return false;
-    }
-
-    private bool ConfirmationQuestionWithYes(string question)
-    {
-        if (AnsiConsole.Confirm($"[green]{question}[/]"))
-        {
-            AnsiConsole.MarkupLine("Muy bien, la respuesta es correcta.");
-
-            return false;
-        }
-
-        return true;
-    }
-
-    private string SelectAnswer(string question, string[] options)
-    {
-        var answer = AnsiConsole.Prompt(
-            new SelectionPrompt<string>()
-                .Title($"[green]{question}[/]")
-                .AddChoices(options));
-
-        return answer;
-
-    }
-
     private void IncreasePower(Item item)
     {
         if (item.Type.Equals(ItemType.SANITY))
         {
-            _player.IncreaseLifePoints(LifePointsBySanity);
+            _player.IncreaseLifePoints(PlayerConstants.LifePointsBySanity);
         }
         else if (item.Type.Equals(ItemType.VELOCITY))
         {
-            _player.IncreaseLifePoints(LifePointsByVelocity);
-            _player.IncreaseAttackPoints(AttackPointsByVelocity);
+            _player.IncreaseLifePoints(PlayerConstants.LifePointsByVelocity);
+            _player.IncreaseAttackPoints(PlayerConstants.AttackPointsByVelocity);
         }
         else if(item.Type.Equals(ItemType.POWER))
         {
-            _player.IncreaseLifePoints(LifePointsByPower);
-            _player.IncreaseAttackPoints(AttackPointsByPower);
+            _player.IncreaseLifePoints(PlayerConstants.LifePointsByPower);
+            _player.IncreaseAttackPoints(PlayerConstants.AttackPointsByPower);
         }
     }
 
