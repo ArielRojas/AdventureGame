@@ -55,28 +55,15 @@ internal class Player : Character
     public string SelectOption()
     {
         var prompt = new TextPrompt<string>("[green]Selecciona un item para pelear[/]?");
-        for (int count = 0; count < _itemsList.Count; count++)
-        {
-            prompt.AddChoice(_itemsList[count].Name);
-        }
-
+        _itemsList.ForEach(item => prompt.AddChoice(item.Name));
         var selectItem = AnsiConsole.Prompt(prompt);
 
         return selectItem;
     }
 
-    public Item searchItem(string itemName)
+    public Item SearchItem(string itemName)
     {
-        Item? item = null;
-        for (int count = 0; count < _itemsList.Count; count++)
-        {
-            if (itemName.Equals(_itemsList[count].Name))
-            {
-                item = _itemsList[count];
-            }
-        }
-
-        return item;
+        return _itemsList.Where(item => itemName.Equals(item.Name)).First();
     }
 
     public string SelectItem()
@@ -128,10 +115,7 @@ internal class Player : Character
     private List<string> GetItemNamesList()
     {
         List<string> itemNamesList = new List<string>();
-        for (int count = 0; count < _itemsList.Count; count++)
-        {
-            itemNamesList.Add(_itemsList[count].Name);
-        }
+        _itemsList.ForEach(item => itemNamesList.Add(item.Name));
 
         return itemNamesList;
     }
@@ -145,10 +129,8 @@ internal class Player : Character
         table.AddColumn("Descripcion");
         table.AddColumn("Tipo");
 
-        for (int count = 0; count < _itemsList.Count; count++)
-        {
-            table.AddRow(_itemsList[count].Name, _itemsList[count].Description, _itemsList[count].Type.ToString());
-        }
+        _itemsList.ForEach(item => table.AddRow(item.Name, item.Description, item.Type.ToString()));
+
         AnsiConsole.Write(table);
     }
 }

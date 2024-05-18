@@ -503,7 +503,7 @@ ________                                       __________        .__  .__      _
     private Item SelectItem()
     {
         string itemName = _player.SelectItem();
-        var item = _player.searchItem(itemName);
+        var item = _player.SearchItem(itemName);
         return item;
     }
 
