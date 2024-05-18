@@ -4,10 +4,9 @@ using Spectre.Console;
 
 internal class Player : Character
 {
-    private Item[] _itemsList;
+    private List<Item> _itemsList;
     private int _lifePoints;
     private int _attackPoints;
-    private int _numberOfItems;
 
     public Player(string name, string description, int lifePoints, int attackPoints) : base(name, description)
     {
@@ -15,8 +14,7 @@ internal class Player : Character
         this.description = description;
         _lifePoints = lifePoints;
         _attackPoints = attackPoints;
-        _itemsList = new Item[11];
-        _numberOfItems = 0;
+        _itemsList = new List<Item>();
     }
 
     public int AttackPoints
@@ -51,32 +49,26 @@ internal class Player : Character
 
     public void AddItem(Item item)
     {
-        _itemsList[_numberOfItems] = item;
-        _numberOfItems++;
-    }
-
-    public Item[] GetItems()
-    {
-        return _itemsList;
+        _itemsList.Add(item);
     }
 
     public string SelectOption()
     {
-
         var prompt = new TextPrompt<string>("[green]Selecciona un item para pelear[/]?");
-        for (int count = 0; count < _numberOfItems; count++)
+        for (int count = 0; count < _itemsList.Count; count++)
         {
             prompt.AddChoice(_itemsList[count].Name);
         }
 
         var selectItem = AnsiConsole.Prompt(prompt);
+
         return selectItem;
     }
 
     public Item searchItem(string itemName)
     {
         Item? item = null;
-        for (int count = 0; count < _numberOfItems; count++)
+        for (int count = 0; count < _itemsList.Count; count++)
         {
             if (itemName.Equals(_itemsList[count].Name))
             {
@@ -92,7 +84,7 @@ internal class Player : Character
         var answer = AnsiConsole.Prompt(
             new SelectionPrompt<string>()
                 .Title($"[green]Selecciona un item para pelear:[/]")
-                .AddChoices(GetItemNamesList().ToArray()));
+                .AddChoices(GetItemNamesList()));
 
         return answer;
     }
@@ -133,12 +125,12 @@ internal class Player : Character
         AnsiConsole.Write(pointsTable);
     }
 
-    private string[] GetItemNamesList()
+    private List<string> GetItemNamesList()
     {
-        string[] itemNamesList = new string[_numberOfItems];
-        for (int count = 0; count < _numberOfItems; count++)
+        List<string> itemNamesList = new List<string>();
+        for (int count = 0; count < _itemsList.Count; count++)
         {
-            itemNamesList[count] = _itemsList[count].Name;
+            itemNamesList.Add(_itemsList[count].Name);
         }
 
         return itemNamesList;
@@ -153,7 +145,7 @@ internal class Player : Character
         table.AddColumn("Descripcion");
         table.AddColumn("Tipo");
 
-        for (int count = 0; count < _numberOfItems; count++)
+        for (int count = 0; count < _itemsList.Count; count++)
         {
             table.AddRow(_itemsList[count].Name, _itemsList[count].Description, _itemsList[count].Type.ToString());
         }
