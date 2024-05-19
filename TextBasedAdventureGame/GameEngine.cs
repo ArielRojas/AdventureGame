@@ -10,9 +10,6 @@ internal class GameEngine
     private readonly TimeSpan _sleep = TimeSpan.FromMilliseconds(5000);
     private readonly TimeSpan _timeToFight = TimeSpan.FromMilliseconds(2000);
 
-    private const string Introduction = "El planeta Tierra ha sido atacado por varios enemigos, ellos quieren obtener las esferas del dragon para obtener la vida eterna"
-        + " y destruir todo el planeta, tu eres el unico que puede salvarnos, porfavor ayudanos a derrotarlos y salvar este planeta.";
-
     public GameEngine()
     {
         _locationsList = new Location[10];
@@ -92,24 +89,24 @@ internal class GameEngine
     public void ShowIntroduction()
     {
         Console.Clear();
-        var panel = new Panel($"[orange1]{Introduction}[/]");
+        var panel = new Panel($"[orange1]{GameConstants.Introduction}[/]");
         panel.Header = new PanelHeader($"[bold]Dragon Ball Game[/]");
         panel.Expand = true;
         AnsiConsole.Write(panel);
         Thread.Sleep(_sleep*3);
-        Console.WriteLine("Presiona una tecla para empezar el juego.");
+        Console.WriteLine(GameConstants.PressKeyToStartGame);
         Console.ReadKey();
         Console.Clear();
     }
 
     public void ShowInformationForPlayer()
     {
-        AnsiConsole.MarkupLine("[bold]Informacion para el jugador\n[/]");
-        AnsiConsole.MarkupInterpolated($"[orange1]{_player.Name} inicialmente tienes unos 1000 puntos de vida y 100 puntos de ataque. Tambien tienes un item por defecto que es el Baculo Sagrado.\n[/]");
-        AnsiConsole.MarkupLine("[orange1]Debes responder las preguntas correctamente para ganar puntos de vida.[/]");
-        AnsiConsole.MarkupLine("[orange1]Tambien obtendras un item en cada nivel que te ayudaran a aumentar tus puntos de vida y ataque.[/]");
-        AnsiConsole.MarkupLine("[orange1]Hay 3 tipos de item: de poder, de velocidad y sanidad. Un item de poder te dara mucho mas puntos de vida y ataque.[/]");
-        AnsiConsole.MarkupLine("[orange1]Estos items te ayudaran a derrotar a los jefes que amenazan con destruir el planeta Tierra.\n[/]");
+        AnsiConsole.MarkupLine($"[bold]{GameConstants.InformationForPlayer}\n[/]");
+        AnsiConsole.MarkupInterpolated($"[orange1]{_player.Name}{GameConstants.InformationFirstSentence}\n[/]");
+        AnsiConsole.MarkupLine($"[orange1]{GameConstants.InformationSecondSentence}[/]");
+        AnsiConsole.MarkupLine($"[orange1]{GameConstants.InformationThirdSentence}[/]");
+        AnsiConsole.MarkupLine($"[orange1]{GameConstants.InformationFourthSentence}[/]");
+        AnsiConsole.MarkupLine($"[orange1]{GameConstants.InformationFifthSentence}[/]");
         Thread.Sleep(_sleep);
         ContinueWithGame();
         Console.Clear();
@@ -479,7 +476,7 @@ internal class GameEngine
 
     private void ContinueWithGame()
     {
-        Console.WriteLine("Presiona una tecla para continuar.");
+        Console.WriteLine(GameConstants.PressKeyToContinueGame);
         Console.ReadKey();
     }
 }

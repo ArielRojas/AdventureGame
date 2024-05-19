@@ -1,4 +1,4 @@
-﻿namespace TextBasedAdventureGame;
+﻿namespace TextBasedAdventureGame.Constants;
 
 public static class QuestionConstants
 {
