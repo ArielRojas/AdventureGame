@@ -8,4 +8,8 @@ internal static class PlayerConstants
     public const int LifePointsByVelocity = 100;
     public const int LifePointsBySanity = 1000;
     public const int LifePointsByQuestion = 200;
+
+    public const string Item = "Item";
+    public const string Descripcion = "Descripcion";
+    public const string Tipo = "Tipo";
 }

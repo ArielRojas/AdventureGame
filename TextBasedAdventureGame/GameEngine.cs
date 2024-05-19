@@ -73,17 +73,7 @@ internal class GameEngine
 
     public void ShowGameName()
     {
-        var gameName = @"
-
-________                                       __________        .__  .__      ________                       
-\______ \____________     ____   ____   ____   \______   \_____  |  | |  |    /  _____/_____    _____   ____  
- |    |  \_  __ \__  \   / ___\ /  _ \ /    \   |    |  _/\__  \ |  | |  |   /   \  ___\__  \  /     \_/ __ \ 
- |    `   \  | \// __ \_/ /_/  >  <_> )   |  \  |    |   \ / __ \|  |_|  |__ \    \_\  \/ __ \|  Y Y  \  ___/ 
-/_______  /__|  (____  /\___  / \____/|___|  /  |______  /(____  /____/____/  \______  (____  /__|_|  /\___  >
-        \/           \//_____/             \/          \/      \/                    \/     \/      \/     \/ 
-
-";
-        AnsiConsole.MarkupInterpolated($"[bold darkgreen]{gameName}[/]");
+        AnsiConsole.MarkupInterpolated($"[bold darkgreen]{AnimationStrings.gameName}[/]");
     }
 
     public string GetPlayerName()
@@ -192,8 +182,8 @@ ________                                       __________        .__  .__      _
                     firstBoss.ShowBossPoints();
                     Thread.Sleep(_sleep);
                     _player.ShowInformation();
-                    item = SelectItem();
-                    IncreasePower(item);
+                    item = _player.SelectItemToFight();
+                    _player.IncreasePower(item);
                     _player.ShowPlayerPoints();
                     Thread.Sleep(_sleep);
                     while (firstBoss.LifePoints > 0 && _player.LifePoints > 0)
@@ -288,8 +278,8 @@ ________                                       __________        .__  .__      _
                     secondBoss.ShowBossPoints();
                     Thread.Sleep(_sleep);
                     _player.ShowInformation();
-                    item = SelectItem();
-                    IncreasePower(item);
+                    item = _player.SelectItemToFight();
+                    _player.IncreasePower(item);
                     _player.ShowPlayerPoints();
                     Thread.Sleep(_sleep);
                     while (secondBoss.LifePoints > 0 && _player.LifePoints > 0)
@@ -408,8 +398,8 @@ ________                                       __________        .__  .__      _
                     thirdBoss.ShowBossPoints();
                     Thread.Sleep(_sleep);
                     _player.ShowInformation();
-                    item = SelectItem();
-                    IncreasePower(item);
+                    item = _player.SelectItemToFight();
+                    _player.IncreasePower(item);
                     _player.ShowPlayerPoints();
                     Thread.Sleep(_sleep);
                     while (thirdBoss.LifePoints > 0 && _player.LifePoints > 0)
@@ -482,71 +472,9 @@ ________                                       __________        .__  .__      _
         return _locationsList[position];
     }
 
-    private void IncreasePower(Item item)
-    {
-        if (item.Type.Equals(ItemType.SANITY))
-        {
-            _player.IncreaseLifePoints(PlayerConstants.LifePointsBySanity);
-        }
-        else if (item.Type.Equals(ItemType.VELOCITY))
-        {
-            _player.IncreaseLifePoints(PlayerConstants.LifePointsByVelocity);
-            _player.IncreaseAttackPoints(PlayerConstants.AttackPointsByVelocity);
-        }
-        else if(item.Type.Equals(ItemType.POWER))
-        {
-            _player.IncreaseLifePoints(PlayerConstants.LifePointsByPower);
-            _player.IncreaseAttackPoints(PlayerConstants.AttackPointsByPower);
-        }
-    }
-
-    private Item SelectItem()
-    {
-        string itemName = _player.SelectItem();
-        var item = _player.SearchItem(itemName);
-        return item;
-    }
-
     private void PrintDragon()
     {
-        var dragon = @"      /)          (\                               
-                        /)  <(            )>  (\                          
-                       /(____)\___    ___/(____)\                         
-                       `^------- (_,,_).-------^'                         
-                                .: :: :.                                  
-                               <`^-..-^'>                                 
-                               <^<>'`<>^>>                                
-                                `-(-|)-'  >                               
-                            _____(/=|\)_____>                             
-                           (  .---\()/---.  )  >                          
-                            )(    V^^V-   )(       >                      
-                           (  )   \vv/\- (  )        >                    
-                           ' (     `'  )- ) `         >                   
-                              `      ,'- ' \  `.-.                        
-                                   ,'_ __   \ /   \   >                   
-                                  /____ _    .     )                      
-                                  \======= == )  ,'  >                    
-                                   \========,'  /  >                      
-                     _   ,,-.--.____\_____,' , ' >                        
-                    ( `-'/, <`-------.    ,'   >                          
-                     `  ( )\ )        >--')   /                           
-                         `  ' .------<=====)  (\                          
-                           ,-'        |===)   ( \  _.--.                  
-                          /           .==)    |  \(  --.`                 
-                         /           /==)   , \`.______ \_.-)             
-                        (           /===)      \       \`._/              
-                         `.  `  ____\===)'      \       `._               
-                           ` .      ))=/         .                        
-                                >-'//==.                                  
-                            __,'  /'==-|         .                        
-                      , ---/_,--.(==-,'.         |                        
-                  , ---,   `    (,)  ,'|                                  
-                  - ,---------------'                                     
-                (' /                    \       /                         
-                 `.\                     `-----<                          
-                    )                        \  `.__                      
-                                              ).--._)        ";
-        AnsiConsole.MarkupInterpolated($"[bold darkgreen]{dragon}[/]");
+        AnsiConsole.MarkupInterpolated($"[bold darkgreen]{AnimationStrings.dragon}[/]");
     }
 
     private void ContinueWithGame()

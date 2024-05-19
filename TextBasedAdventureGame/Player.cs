@@ -32,16 +32,6 @@ internal class Player : Character
         set => _lifePoints = value;
     }
 
-    public int IncreaseAttackPoints(int points)
-    {
-        return _attackPoints += points;
-    }
-
-    public int IncreaseLifePoints(int points)
-    {
-        return _lifePoints += points;
-    }
-
     public int ReceiveAttack(int attack)
     {
         return _lifePoints -= attack;
@@ -59,21 +49,6 @@ internal class Player : Character
         var selectItem = AnsiConsole.Prompt(prompt);
 
         return selectItem;
-    }
-
-    public Item SearchItem(string itemName)
-    {
-        return _itemsList.Where(item => itemName.Equals(item.Name)).First();
-    }
-
-    public string SelectItem()
-    {
-        var answer = AnsiConsole.Prompt(
-            new SelectionPrompt<string>()
-                .Title($"[green]Selecciona un item para pelear:[/]")
-                .AddChoices(GetItemNamesList()));
-
-        return answer;
     }
 
     public void ShowInformation()
@@ -112,6 +87,41 @@ internal class Player : Character
         AnsiConsole.Write(pointsTable);
     }
 
+    public void IncreasePower(Item item)
+    {
+        if (item.Type.Equals(ItemType.SANITY))
+        {
+            IncreaseLifePoints(PlayerConstants.LifePointsBySanity);
+        }
+        else if (item.Type.Equals(ItemType.VELOCITY))
+        {
+            IncreaseLifePoints(PlayerConstants.LifePointsByVelocity);
+            IncreaseAttackPoints(PlayerConstants.AttackPointsByVelocity);
+        }
+        else if (item.Type.Equals(ItemType.POWER))
+        {
+            IncreaseLifePoints(PlayerConstants.LifePointsByPower);
+            IncreaseAttackPoints(PlayerConstants.AttackPointsByPower);
+        }
+    }
+
+    public int IncreaseLifePoints(int points)
+    {
+        return _lifePoints += points;
+    }
+
+    public Item SelectItemToFight()
+    {
+        string itemName = SelectItem();
+        var item = SearchItem(itemName);
+        return item;
+    }
+
+    private int IncreaseAttackPoints(int points)
+    {
+        return _attackPoints += points;
+    }
+
     private List<string> GetItemNamesList()
     {
         List<string> itemNamesList = new List<string>();
@@ -125,12 +135,27 @@ internal class Player : Character
         var table = new Table();
 
         AnsiConsole.WriteLine("\nItems del jugador:");
-        table.AddColumn("Item");
-        table.AddColumn("Descripcion");
-        table.AddColumn("Tipo");
+        table.AddColumn(PlayerConstants.Item);
+        table.AddColumn(PlayerConstants.Descripcion);
+        table.AddColumn(PlayerConstants.Tipo);
 
         _itemsList.ForEach(item => table.AddRow(item.Name, item.Description, item.Type.ToString()));
 
         AnsiConsole.Write(table);
+    }
+
+    private Item SearchItem(string itemName)
+    {
+        return _itemsList.Where(item => itemName.Equals(item.Name)).First();
+    }
+
+    private string SelectItem()
+    {
+        var answer = AnsiConsole.Prompt(
+            new SelectionPrompt<string>()
+                .Title($"[green]Selecciona un item para pelear:[/]")
+                .AddChoices(GetItemNamesList()));
+
+        return answer;
     }
 }
