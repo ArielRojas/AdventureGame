@@ -1,6 +1,7 @@
 ﻿namespace TextBasedAdventureGame;
 
 using Spectre.Console;
+using TextBasedAdventureGame.Constants;
 
 internal class Player : Character
 {

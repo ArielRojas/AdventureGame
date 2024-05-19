@@ -1,18 +1,19 @@
 ﻿using Spectre.Console;
 using System.Collections;
+using TextBasedAdventureGame.Constants;
 
 namespace TextBasedAdventureGame;
 
 internal class GameEngine
 {
-    private Location[] _locationsList;
+    private List<Location> _locationsList;
     private Player _player;
     private readonly TimeSpan _sleep = TimeSpan.FromMilliseconds(5000);
     private readonly TimeSpan _timeToFight = TimeSpan.FromMilliseconds(2000);
 
     public GameEngine()
     {
-        _locationsList = new Location[10];
+        _locationsList = new List<Location>();
     }
 
     public void BuildAllLevels()
@@ -102,7 +103,7 @@ internal class GameEngine
     public void ShowInformationForPlayer()
     {
         AnsiConsole.MarkupLine($"[bold]{GameConstants.InformationForPlayer}\n[/]");
-        AnsiConsole.MarkupInterpolated($"[orange1]{_player.Name}{GameConstants.InformationFirstSentence}\n[/]");
+        AnsiConsole.MarkupInterpolated($"[orange1]{_player.Name} {GameConstants.InformationFirstSentence}\n[/]");
         AnsiConsole.MarkupLine($"[orange1]{GameConstants.InformationSecondSentence}[/]");
         AnsiConsole.MarkupLine($"[orange1]{GameConstants.InformationThirdSentence}[/]");
         AnsiConsole.MarkupLine($"[orange1]{GameConstants.InformationFourthSentence}[/]");
@@ -461,7 +462,7 @@ internal class GameEngine
     private void BuildLevelWithObstruction(string name, string description, NonPlayerCharacter obstruction, int position)
     {
         Location location = new Location(name, description, obstruction);
-        _locationsList[position] = location;
+        _locationsList.Add(location);
     }
 
     private Location GetLocation(int position)
