@@ -426,25 +426,25 @@ internal class GameEngine
                     {
                         _player.AddItem(GetLocation(9).NonPlayerCharacter.Item);
                         _player.LifePoints += recoverLifePoints;
-                        Console.WriteLine($"Felicidades!!!, lograste vencer a {thirdBoss.Name}.");
-                        Console.WriteLine($"Lograste obtener todas las {GetLocation(9).NonPlayerCharacter.Item.Name}, eres un verdadero Guerrero Z.");
+                        Console.WriteLine($"{GameConstants.FinalPartFirstSentence} {thirdBoss.Name}.");
+                        Console.WriteLine($"{GameConstants.FinalPartSecondSentence} {GetLocation(9).NonPlayerCharacter.Item.Name}, {GameConstants.FinalPartThirdSentence}");
                         Thread.Sleep(_sleep);
                         ContinueWithGame();
                         Console.Clear();
-                        Console.WriteLine("Es hora de llamar a Shen Long para pedir el deseo que mas anhelas.");
+                        Console.WriteLine($"{GameConstants.FinalPartFourthSentence}");
                         Thread.Sleep(_sleep);
                         PrintDragon();
                         Thread.Sleep(_sleep);
-                        Console.WriteLine($"\n{_player.Name} piensa bien y pide un deseo!");
+                        Console.WriteLine($"\n{_player.Name} {GameConstants.FinalPartFifthSentence}");
                         Thread.Sleep(_sleep);
-                        Console.WriteLine("Como lo pediste, todos los que murieron durante la invasión al planeta Tierra fueron revividos.");
+                        Console.WriteLine($"{GameConstants.FinalPartSixthSentence}");
                         Thread.Sleep(_sleep);
-                        Console.WriteLine("Hasta una proxima ocasión.");
+                        Console.WriteLine($"{GameConstants.FinalPartSevenSentence}");
                         Thread.Sleep(_sleep);
                     }
                     else
                     {
-                        Console.WriteLine("Perdiste, la siguiente vez lo haras mejor.\nEntrena para ser mas fuerte.");
+                        Console.WriteLine($"{GameConstants.FinalPartLoseSentence}");
                     }
 
                     level++;
