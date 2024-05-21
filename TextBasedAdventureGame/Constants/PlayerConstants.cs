@@ -19,4 +19,5 @@ internal static class PlayerConstants
     public const string SelectItemToFight = "Selecciona un item para pelear:";
     public const string LifePoints = "Tus puntos de vida:";
     public const string AttackPoints = "Tus puntos de ataque:";
+    public const string PlayerItems = "Items del jugador:";
 }

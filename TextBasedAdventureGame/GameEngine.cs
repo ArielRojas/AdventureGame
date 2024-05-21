@@ -94,7 +94,6 @@ internal class GameEngine
         panel.Header = new PanelHeader($"[bold]Dragon Ball Game[/]");
         panel.Expand = true;
         AnsiConsole.Write(panel);
-        Thread.Sleep(_sleep*3);
         Console.WriteLine(GameConstants.PressKeyToStartGame);
         Console.ReadKey();
         Console.Clear();
@@ -108,7 +107,6 @@ internal class GameEngine
         AnsiConsole.MarkupLine($"[orange1]{GameConstants.InformationThirdSentence}[/]");
         AnsiConsole.MarkupLine($"[orange1]{GameConstants.InformationFourthSentence}[/]");
         AnsiConsole.MarkupLine($"[orange1]{GameConstants.InformationFifthSentence}[/]");
-        Thread.Sleep(_sleep);
         ContinueWithGame();
         Console.Clear();
     }

@@ -18,8 +18,6 @@ internal class Player : Character
         _itemsList = [];
     }
 
-    
-
     public int LifePoints
     {
         get => _lifePoints;
@@ -57,8 +55,8 @@ internal class Player : Character
 
             Dictionary<string, Action> actions = new Dictionary<string, Action>
             {
-                {options[0], () => ShowItemsOnTable()},
-                {options[1], () => ShowPlayerPoints()},
+                {options[0], ShowItemsOnTable},
+                {options[1], ShowPlayerPoints},
                 {options[2], () => showInformation = false}
             };
 
@@ -76,25 +74,31 @@ internal class Player : Character
 
     public void IncreasePower(Item item)
     {
-        if (item.Type.Equals(ItemType.SANITY))
+        Dictionary<Enum, Action> increasePoints = new Dictionary<Enum, Action>
         {
-            IncreaseLifePoints(PlayerConstants.LifePointsBySanity);
-        }
-        else if (item.Type.Equals(ItemType.VELOCITY))
-        {
-            IncreaseLifePoints(PlayerConstants.LifePointsByVelocity);
-            IncreaseAttackPoints(PlayerConstants.AttackPointsByVelocity);
-        }
-        else if (item.Type.Equals(ItemType.POWER))
-        {
-            IncreaseLifePoints(PlayerConstants.LifePointsByPower);
-            IncreaseAttackPoints(PlayerConstants.AttackPointsByPower);
-        }
+            {ItemType.SANITY, () => IncreaseLifePoints(PlayerConstants.LifePointsBySanity)},
+            {ItemType.VELOCITY, IncreasePointsByVelocityItem},
+            {ItemType.POWER, IncreasePointsByPowerItem}
+        };
+
+        increasePoints[item.Type]();
     }
 
     public int IncreaseLifePoints(int points)
     {
         return _lifePoints += points;
+    }
+
+    public void IncreasePointsByVelocityItem()
+    {
+        IncreaseLifePoints(PlayerConstants.LifePointsByVelocity);
+        IncreaseAttackPoints(PlayerConstants.AttackPointsByVelocity);
+    }
+
+    public void IncreasePointsByPowerItem()
+    {
+        IncreaseLifePoints(PlayerConstants.LifePointsByPower);
+        IncreaseAttackPoints(PlayerConstants.AttackPointsByPower);
     }
 
     public Item SelectItemToFight()
@@ -119,7 +123,7 @@ internal class Player : Character
     {
         var table = new Table();
 
-        AnsiConsole.WriteLine("\nItems del jugador:");
+        AnsiConsole.WriteLine($"\n{PlayerConstants.PlayerItems}");
         table.AddColumn(PlayerConstants.Item);
         table.AddColumn(PlayerConstants.Descripcion);
         table.AddColumn(PlayerConstants.Tipo);
