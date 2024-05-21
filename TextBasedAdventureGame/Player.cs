@@ -7,25 +7,18 @@ internal class Player : Character
 {
     private List<Item> _itemsList;
     private int _lifePoints;
-    private int _attackPoints;
+    public int AttackPoints{ get; set; }
 
     public Player(string name, string description, int lifePoints, int attackPoints) : base(name, description)
     {
         this.name = name;
         this.description = description;
         _lifePoints = lifePoints;
-        _attackPoints = attackPoints;
-        _itemsList = new List<Item>();
+        AttackPoints = attackPoints;
+        _itemsList = [];
     }
 
-    public int AttackPoints
-    {
-        get => _attackPoints;
-        set
-        {
-            _attackPoints = value;
-        }
-    }
+    
 
     public int LifePoints
     {
@@ -45,46 +38,39 @@ internal class Player : Character
 
     public string SelectOption()
     {
-        var prompt = new TextPrompt<string>("[green]Selecciona un item para pelear[/]?");
+        var prompt = new TextPrompt<string>($"[green]{PlayerConstants.SelectItemToFight}[/]?");
         _itemsList.ForEach(item => prompt.AddChoice(item.Name));
         var selectItem = AnsiConsole.Prompt(prompt);
 
         return selectItem;
     }
 
-    public void ShowInformation()
+    public void ShowInformation(params string[] options)
     {
         var showInformation = true;
 
         while(showInformation)
         {
             var option = AnsiConsole.Prompt(new SelectionPrompt<string>()
-            .Title("[green]Informacion del Jugador[/]")
-            .AddChoices(new[]
-            {
-                "Mostrar items", "Mostrar puntos de vida y ataque actuales", "Continuar con el juego"
-            }));
+            .Title($"[green]{PlayerConstants.PlayerInformation}[/]")
+            .AddChoices(options));
 
-            switch (option)
+            Dictionary<string, Action> actions = new Dictionary<string, Action>
             {
-                case "Mostrar items":
-                    ShowItemsOnTable();
-                    break;
-                case "Mostrar puntos de vida y ataque actuales":
-                    ShowPlayerPoints();
-                    break;
-                case "Continuar con el juego":
-                    showInformation = false;
-                    break;
-            }
+                {options[0], () => ShowItemsOnTable()},
+                {options[1], () => ShowPlayerPoints()},
+                {options[2], () => showInformation = false}
+            };
+
+            actions[option]();
         }
     }
 
     public void ShowPlayerPoints()
     {
         var pointsTable = new Table();
-        pointsTable.AddColumn($"[green]Tus puntos de vida: {_lifePoints}[/]");
-        pointsTable.AddRow($"[green]Tus puntos de ataque: {_attackPoints}[/]");
+        pointsTable.AddColumn($"[green]{PlayerConstants.LifePoints} {_lifePoints}[/]");
+        pointsTable.AddRow($"[green]{PlayerConstants.AttackPoints} {AttackPoints}[/]");
         AnsiConsole.Write(pointsTable);
     }
 
@@ -115,20 +101,18 @@ internal class Player : Character
     {
         string itemName = SelectItem();
         var item = SearchItem(itemName);
+
         return item;
     }
 
     private int IncreaseAttackPoints(int points)
     {
-        return _attackPoints += points;
+        return AttackPoints += points;
     }
 
     private List<string> GetItemNamesList()
     {
-        List<string> itemNamesList = new List<string>();
-        _itemsList.ForEach(item => itemNamesList.Add(item.Name));
-
-        return itemNamesList;
+        return _itemsList.Select(item => item.Name).ToList();
     }
 
     private void ShowItemsOnTable()
@@ -154,7 +138,7 @@ internal class Player : Character
     {
         var answer = AnsiConsole.Prompt(
             new SelectionPrompt<string>()
-                .Title($"[green]Selecciona un item para pelear:[/]")
+                .Title($"[green]{PlayerConstants.SelectItemToFight}[/]")
                 .AddChoices(GetItemNamesList()));
 
         return answer;

@@ -13,7 +13,7 @@ internal class GameEngine
 
     public GameEngine()
     {
-        _locationsList = new List<Location>();
+        _locationsList = [];
     }
 
     public void BuildAllLevels()
@@ -179,7 +179,7 @@ internal class GameEngine
                     Console.WriteLine($"Un jefe esta frente a ti!!!\nEs {firstBoss.Name}.");
                     firstBoss.ShowBossPoints();
                     Thread.Sleep(_sleep);
-                    _player.ShowInformation();
+                    _player.ShowInformation(PlayerConstants.DisplayItems, PlayerConstants.DisplayLifeAndAttackPoints, PlayerConstants.ContinueWithGame);
                     item = _player.SelectItemToFight();
                     _player.IncreasePower(item);
                     _player.ShowPlayerPoints();
@@ -275,7 +275,7 @@ internal class GameEngine
                     Console.WriteLine($"Un jefe esta frente a ti!!!\nEs el gran {secondBoss.Name}.");
                     secondBoss.ShowBossPoints();
                     Thread.Sleep(_sleep);
-                    _player.ShowInformation();
+                    _player.ShowInformation(PlayerConstants.DisplayItems, PlayerConstants.DisplayLifeAndAttackPoints, PlayerConstants.ContinueWithGame);
                     item = _player.SelectItemToFight();
                     _player.IncreasePower(item);
                     _player.ShowPlayerPoints();
@@ -395,7 +395,7 @@ internal class GameEngine
                     Console.WriteLine($"Un jefe esta frente a ti!!!\nEs el poderoso {thirdBoss.Name}.");
                     thirdBoss.ShowBossPoints();
                     Thread.Sleep(_sleep);
-                    _player.ShowInformation();
+                    _player.ShowInformation(PlayerConstants.DisplayItems, PlayerConstants.DisplayLifeAndAttackPoints, PlayerConstants.ContinueWithGame);
                     item = _player.SelectItemToFight();
                     _player.IncreasePower(item);
                     _player.ShowPlayerPoints();
