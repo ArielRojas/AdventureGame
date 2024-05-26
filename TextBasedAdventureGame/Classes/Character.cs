@@ -1,4 +1,4 @@
-﻿namespace TextBasedAdventureGame;
+﻿namespace TextBasedAdventureGame.Classes;
 
 internal class Character
 {

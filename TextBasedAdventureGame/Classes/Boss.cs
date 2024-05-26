@@ -1,8 +1,8 @@
-﻿namespace TextBasedAdventureGame;
+﻿namespace TextBasedAdventureGame.Classes;
 
 using Spectre.Console;
 
-internal class Boss: NonPlayerCharacter
+internal class Boss : NonPlayerCharacter
 {
     private int _lifePoints;
     private int _attackPoints;

@@ -1,8 +1,9 @@
 ﻿using Spectre.Console;
 using System.Collections;
 using TextBasedAdventureGame.Constants;
+using TextBasedAdventureGame.Enums;
 
-namespace TextBasedAdventureGame;
+namespace TextBasedAdventureGame.Classes;
 
 internal class GameEngine
 {
@@ -118,7 +119,7 @@ internal class GameEngine
         string answer = string.Empty;
         var finishFlag = false;
 
-        while(_player.LifePoints > 0 && !finishFlag)
+        while (_player.LifePoints > 0 && !finishFlag)
         {
             var tablePointsOfPlayer = new Table();
             var tablePointsOfBoss = new Table();
@@ -150,7 +151,7 @@ internal class GameEngine
 
                 case 2:
                     GetLocation(1).ShowLocationInformation();
-                    string[] options = {"Oolong", "Puar", "Ten Ten"};
+                    string[] options = { "Oolong", "Puar", "Ten Ten" };
                     answer = QuestionHandler.PromptQuestionWithSimpleSelect(GetLocation(1).NonPlayerCharacter.Name, options);
                     if (answer.Equals(QuestionConstants.Answer2))
                     {
@@ -206,7 +207,7 @@ internal class GameEngine
 
                     if (_player.LifePoints > 0)
                     {
-                        Console.WriteLine($"Felicidades!!!, lograste vencer a {firstBoss.Name}." );
+                        Console.WriteLine($"Felicidades!!!, lograste vencer a {firstBoss.Name}.");
                         Console.WriteLine($"Ganaste las {GetLocation(2).NonPlayerCharacter.Item.Name}");
                         _player.AddItem(GetLocation(2).NonPlayerCharacter.Item);
                         _player.LifePoints += recoverLifePoints;
@@ -317,7 +318,7 @@ internal class GameEngine
                     }
 
                     level++;
-                    
+
                     break;
 
                 case 7:

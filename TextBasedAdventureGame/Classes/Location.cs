@@ -1,4 +1,4 @@
-﻿namespace TextBasedAdventureGame;
+﻿namespace TextBasedAdventureGame.Classes;
 
 using Spectre.Console;
 

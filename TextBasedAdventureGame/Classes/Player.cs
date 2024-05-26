@@ -1,13 +1,14 @@
-﻿namespace TextBasedAdventureGame;
+﻿namespace TextBasedAdventureGame.Classes;
 
 using Spectre.Console;
 using TextBasedAdventureGame.Constants;
+using TextBasedAdventureGame.Enums;
 
 internal class Player : Character
 {
     private List<Item> _itemsList;
     private int _lifePoints;
-    public int AttackPoints{ get; set; }
+    public int AttackPoints { get; set; }
 
     public Player(string name, string description, int lifePoints, int attackPoints) : base(name, description)
     {
@@ -47,7 +48,7 @@ internal class Player : Character
     {
         var showInformation = true;
 
-        while(showInformation)
+        while (showInformation)
         {
             var option = AnsiConsole.Prompt(new SelectionPrompt<string>()
             .Title($"[green]{PlayerConstants.PlayerInformation}[/]")

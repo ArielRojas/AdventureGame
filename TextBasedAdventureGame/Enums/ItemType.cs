@@ -1,4 +1,4 @@
-﻿namespace TextBasedAdventureGame;
+﻿namespace TextBasedAdventureGame.Enums;
 
 public enum ItemType
 {
