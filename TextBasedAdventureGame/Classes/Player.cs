@@ -3,17 +3,20 @@
 using Spectre.Console;
 using TextBasedAdventureGame.Constants;
 using TextBasedAdventureGame.Enums;
+using TextBasedAdventureGame.Interfaces;
 
-internal class Player : Character
+internal class Player : ICharacter
 {
+    private string _name;
+    private string _description;
     private List<Item> _itemsList;
     private int _lifePoints;
     public int AttackPoints { get; set; }
 
-    public Player(string name, string description, int lifePoints, int attackPoints) : base(name, description)
+    public Player(string name, string description, int lifePoints, int attackPoints)
     {
-        this.name = name;
-        this.description = description;
+        _name = name;
+        _description = description;
         _lifePoints = lifePoints;
         AttackPoints = attackPoints;
         _itemsList = [];
@@ -24,6 +27,8 @@ internal class Player : Character
         get => _lifePoints;
         set => _lifePoints = value;
     }
+
+    public string Name => _name;
 
     public int ReceiveAttack(int attack)
     {
@@ -57,7 +62,7 @@ internal class Player : Character
             Dictionary<string, Action> actions = new Dictionary<string, Action>
             {
                 {options[0], ShowItemsOnTable},
-                {options[1], ShowPlayerPoints},
+                {options[1], ShowPoints},
                 {options[2], () => showInformation = false}
             };
 
@@ -65,12 +70,17 @@ internal class Player : Character
         }
     }
 
-    public void ShowPlayerPoints()
+    public void ShowPoints()
     {
         var pointsTable = new Table();
         pointsTable.AddColumn($"[green]{PlayerConstants.LifePoints} {_lifePoints}[/]");
         pointsTable.AddRow($"[green]{PlayerConstants.AttackPoints} {AttackPoints}[/]");
         AnsiConsole.Write(pointsTable);
+    }
+
+    public void InteractInGame()
+    {
+        throw new NotImplementedException();
     }
 
     public void IncreasePower(Item item)

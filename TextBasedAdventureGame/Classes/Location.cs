@@ -1,18 +1,27 @@
 ﻿namespace TextBasedAdventureGame.Classes;
 
 using Spectre.Console;
+using TextBasedAdventureGame.Interfaces;
 
 internal class Location
 {
     private readonly string _name;
     private readonly string _description;
-    private NonPlayerCharacter _nonPlayerCharacter;
+    private IQuestion _question;
+    private ICharacter _character;
 
-    public Location(string name, string description, NonPlayerCharacter nonPlayerCharacter)
+    public Location(string name, string description, IQuestion question)
     {
         _name = name;
         _description = description;
-        _nonPlayerCharacter = nonPlayerCharacter;
+        _question = question;
+    }
+
+    public Location(string name, string description, ICharacter character)
+    {
+        _name = name;
+        _description = description;
+        _character = character;
     }
 
     public string Name
@@ -25,10 +34,12 @@ internal class Location
         get => _description;
     }
 
-    public NonPlayerCharacter NonPlayerCharacter
+    public IQuestion Question
     {
-        get => _nonPlayerCharacter;
+        get => _question;
     }
+
+    public ICharacter Character { get => _character; }
 
     public void ShowLocationInformation()
     {

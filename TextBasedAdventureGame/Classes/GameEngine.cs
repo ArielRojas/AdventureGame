@@ -1,7 +1,9 @@
 ﻿using Spectre.Console;
+using System;
 using System.Collections;
 using TextBasedAdventureGame.Constants;
 using TextBasedAdventureGame.Enums;
+using TextBasedAdventureGame.Interfaces;
 
 namespace TextBasedAdventureGame.Classes;
 
@@ -22,52 +24,52 @@ internal class GameEngine
         // Level1
         Item item = new Item("Agua Ultrasagrada", ItemType.SANITY, "El agua ultrasagrada es un líquido diferente al agua corriente y sirve para incrementar la fuerza y la agilidad.");
         QuestionCharacter questionCharacter = new QuestionCharacter(QuestionConstants.Question1, "", item);
-        BuildLevelWithObstruction("Level 1", "Prepara tu camino", questionCharacter, 0);
+        BuildLevelWithQuestion("Level 1", "Prepara tu camino", questionCharacter, 0);
 
         // Level2
         Item item2 = new Item("KAME HAME HA", ItemType.POWER, "gran cantidad de energía en las manos");
         QuestionCharacter questionCharacter2 = new QuestionCharacter(QuestionConstants.Question2, "", item2);
-        BuildLevelWithObstruction("Level 2", "Siente el poder en tus manos", questionCharacter2, 1);
+        BuildLevelWithQuestion("Level 2", "Siente el poder en tus manos", questionCharacter2, 1);
 
         // Level3
         Item item3 = new Item("Semillas del hermitanio", ItemType.SANITY, "Recupera tus energias");
         Boss boss = new Boss("Piccolo Maligno", "Es un guerreno del mal de la raza Namekusei", item3, 1300, 300);
-        BuildLevelWithObstruction("Level 3", "Gran rey demonio Piccolo", boss, 2);
+        BuildLevelWithBoss("Level 3", "Gran rey demonio Piccolo", boss, 2);
 
         // Level4
         Item item4 = new Item("Nube Voladora", ItemType.VELOCITY, "es un objeto mágico que sirve para transportar al guerrero que lo utiliza, siempre y cuando sea de corazón puro y mente limpia.");
         QuestionCharacter questionCharacter4 = new QuestionCharacter(QuestionConstants.Question3, "", item4);
-        BuildLevelWithObstruction("Level 4", "Vuela alto a una gran velocidad", questionCharacter4, 3);
+        BuildLevelWithQuestion("Level 4", "Vuela alto a una gran velocidad", questionCharacter4, 3);
 
         // Level5
         Item item5 = new Item("Kaioken", ItemType.VELOCITY, "es una técnica poderosa que permite a los guerreros aumentar su fuerza y velocidad temporalmente.");
         QuestionCharacter questionCharacter5 = new QuestionCharacter(QuestionConstants.Question5, "", item5);
-        BuildLevelWithObstruction("Level 5", "Aumenta tu poder por 10", questionCharacter5, 4);
+        BuildLevelWithQuestion("Level 5", "Aumenta tu poder por 10", questionCharacter5, 4);
 
         // Level6
         Item item6 = new Item("Super Saiyajin", ItemType.POWER, "Es el primer nivel que puede alcanzar un saiyajin");
         Boss boss2 = new Boss("Freezer", "Es un tirano intergaláctico", item6, 1800, 800);
-        BuildLevelWithObstruction("Level 6", "El mundo esta en peligro", boss2, 5);
+        BuildLevelWithBoss("Level 6", "El mundo esta en peligro", boss2, 5);
 
         // Level7
         Item item7 = new Item("Resplandor Final", ItemType.POWER, "El ataque definitivo de Vegeta");
         QuestionCharacter questionCharacter7 = new QuestionCharacter(QuestionConstants.Question6, "", item7);
-        BuildLevelWithObstruction("Level 7", "Destruccion Masiva", questionCharacter7, 6);
+        BuildLevelWithQuestion("Level 7", "Destruccion Masiva", questionCharacter7, 6);
 
         // Level8
         Item item8 = new Item("Genki-dama", ItemType.POWER, "Es una técnica de combate de naturaleza ofensiva que requiere una parte de la energía de todas las criaturas");
         QuestionCharacter questionCharacter8 = new QuestionCharacter(QuestionConstants.Question7, "", item8);
-        BuildLevelWithObstruction("Level 8", "Siente el poder de todo un planeta", questionCharacter8, 7);
+        BuildLevelWithQuestion("Level 8", "Siente el poder de todo un planeta", questionCharacter8, 7);
 
         // Level9
         Item item9 = new Item("Super Saiyajin Fase 2", ItemType.POWER, "Es el segundo nivel que puede alcanzar un saiyajin");
         QuestionCharacter questionCharacter9 = new QuestionCharacter(QuestionConstants.Question9, "", item9);
-        BuildLevelWithObstruction("Level 9", "Un nuevo poder ha despertado", questionCharacter9, 8);
+        BuildLevelWithQuestion("Level 9", "Un nuevo poder ha despertado", questionCharacter9, 8);
 
         // Level10
         Item item10 = new Item("Esferas del Dragon", ItemType.SANITY, "Son 7 esferas que te ayudan a llamar a Shen Long para pedir un deseo.");
         Boss boss3 = new Boss("Cell", "Es un bioandroide creado por la computadora del Dr. Gero", item10, 3000, 1000);
-        BuildLevelWithObstruction("Level 10", "Es tu oportunidad de revivir a tus seres queridos", boss3, 9);
+        BuildLevelWithBoss("Level 10", "Es tu oportunidad de revivir a tus seres queridos", boss3, 9);
     }
 
     public void ShowGameName()
@@ -130,12 +132,12 @@ internal class GameEngine
             {
                 case 1:
                     GetLocation(0).ShowLocationInformation();
-                    flag = QuestionHandler.AskQuestionWithNoConfirmation(GetLocation(0).NonPlayerCharacter.Name);
+                    flag = QuestionHandler.AskQuestionWithNoConfirmation(GetLocation(0).Question.Name);
                     if (flag)
                     {
                         _player.IncreaseLifePoints(PlayerConstants.LifePointsByQuestion);
-                        _player.AddItem(GetLocation(0).NonPlayerCharacter.Item);
-                        Console.WriteLine($"Felicidades, ganaste el {GetLocation(0).NonPlayerCharacter.Item.Name}");
+                        _player.AddItem(GetLocation(0).Question.Item);
+                        Console.WriteLine($"Felicidades, ganaste el {GetLocation(0).Question.Item.Name}");
                     }
                     else
                     {
@@ -143,7 +145,7 @@ internal class GameEngine
                     }
 
                     level++;
-                    _player.ShowPlayerPoints();
+                    _player.ShowPoints();
                     Thread.Sleep(_sleep);
                     ContinueWithGame();
                     Console.Clear();
@@ -152,13 +154,13 @@ internal class GameEngine
                 case 2:
                     GetLocation(1).ShowLocationInformation();
                     string[] options = { "Oolong", "Puar", "Ten Ten" };
-                    answer = QuestionHandler.PromptQuestionWithSimpleSelect(GetLocation(1).NonPlayerCharacter.Name, options);
+                    answer = QuestionHandler.PromptQuestionWithSimpleSelect(GetLocation(1).Question.Name, options);
                     if (answer.Equals(QuestionConstants.Answer2))
                     {
                         _player.IncreaseLifePoints(PlayerConstants.LifePointsByQuestion);
                         Console.WriteLine("Felicidades!, la respuesta es correcta.");
-                        _player.AddItem(GetLocation(1).NonPlayerCharacter.Item);
-                        Console.WriteLine($"Ahora podras hacer un {GetLocation(1).NonPlayerCharacter.Item.Name}");
+                        _player.AddItem(GetLocation(1).Question.Item);
+                        Console.WriteLine($"Ahora podras hacer un {GetLocation(1).Question.Item.Name}");
                     }
                     else
                     {
@@ -166,7 +168,7 @@ internal class GameEngine
                     }
 
                     level++;
-                    _player.ShowPlayerPoints();
+                    _player.ShowPoints();
                     Thread.Sleep(_sleep);
                     ContinueWithGame();
                     Console.Clear();
@@ -174,14 +176,14 @@ internal class GameEngine
 
                 case 3:
                     GetLocation(2).ShowLocationInformation();
-                    var firstBoss = (Boss)GetLocation(2).NonPlayerCharacter;
+                    var firstBoss = (Boss)GetLocation(2).Character;
                     Console.WriteLine($"Un jefe esta frente a ti!!!\nEs {firstBoss.Name}.");
-                    firstBoss.ShowBossPoints();
+                    firstBoss.ShowPoints();
                     Thread.Sleep(_sleep);
                     _player.ShowInformation(PlayerConstants.DisplayItems, PlayerConstants.DisplayLifeAndAttackPoints, PlayerConstants.ContinueWithGame);
                     item = _player.SelectItemToFight();
                     _player.IncreasePower(item);
-                    _player.ShowPlayerPoints();
+                    _player.ShowPoints();
                     Thread.Sleep(_sleep);
                     while (firstBoss.LifePoints > 0 && _player.LifePoints > 0)
                     {
@@ -208,8 +210,8 @@ internal class GameEngine
                     if (_player.LifePoints > 0)
                     {
                         Console.WriteLine($"Felicidades!!!, lograste vencer a {firstBoss.Name}.");
-                        Console.WriteLine($"Ganaste las {GetLocation(2).NonPlayerCharacter.Item.Name}");
-                        _player.AddItem(GetLocation(2).NonPlayerCharacter.Item);
+                        Console.WriteLine($"Ganaste las {GetLocation(2).Question.Item.Name}");
+                        _player.AddItem(GetLocation(2).Question.Item);
                         _player.LifePoints += recoverLifePoints;
                         Thread.Sleep(_sleep);
                         ContinueWithGame();
@@ -226,12 +228,12 @@ internal class GameEngine
 
                 case 4:
                     GetLocation(3).ShowLocationInformation();
-                    flag = QuestionHandler.AskQuestionWithYesConfirmation(GetLocation(3).NonPlayerCharacter.Name);
+                    flag = QuestionHandler.AskQuestionWithYesConfirmation(GetLocation(3).Question.Name);
                     if (!flag)
                     {
                         _player.IncreaseLifePoints(PlayerConstants.LifePointsByQuestion);
-                        _player.AddItem(GetLocation(3).NonPlayerCharacter.Item);
-                        Console.WriteLine($"Felicidades, ganaste una {GetLocation(3).NonPlayerCharacter.Item.Name}");
+                        _player.AddItem(GetLocation(3).Question.Item);
+                        Console.WriteLine($"Felicidades, ganaste una {GetLocation(3).Question.Item.Name}");
                     }
                     else
                     {
@@ -239,7 +241,7 @@ internal class GameEngine
                     }
 
                     level++;
-                    _player.ShowPlayerPoints();
+                    _player.ShowPoints();
                     Thread.Sleep(_sleep);
                     ContinueWithGame();
                     Console.Clear();
@@ -248,13 +250,13 @@ internal class GameEngine
                 case 5:
                     GetLocation(4).ShowLocationInformation();
                     string[] options2 = { "Resplandor Final", "Genki-dama", "Makankosappo" };
-                    answer = QuestionHandler.PromptQuestionWithSimpleSelect(GetLocation(4).NonPlayerCharacter.Name, options2);
+                    answer = QuestionHandler.PromptQuestionWithSimpleSelect(GetLocation(4).Question.Name, options2);
                     if (answer.Equals(QuestionConstants.Answer5))
                     {
                         _player.IncreaseLifePoints(PlayerConstants.LifePointsByQuestion);
-                        _player.AddItem(GetLocation(4).NonPlayerCharacter.Item);
+                        _player.AddItem(GetLocation(4).Question.Item);
                         Console.WriteLine("Felicidades!, la respuesta es correcta.");
-                        Console.WriteLine($"Ahora podras hacer el {GetLocation(4).NonPlayerCharacter.Item.Name}");
+                        Console.WriteLine($"Ahora podras hacer el {GetLocation(4).Question.Item.Name}");
                     }
                     else
                     {
@@ -262,7 +264,7 @@ internal class GameEngine
                     }
 
                     level++;
-                    _player.ShowPlayerPoints();
+                    _player.ShowPoints();
                     Thread.Sleep(_sleep);
                     ContinueWithGame();
                     Console.Clear();
@@ -270,14 +272,14 @@ internal class GameEngine
 
                 case 6:
                     GetLocation(5).ShowLocationInformation();
-                    var secondBoss = (Boss)GetLocation(5).NonPlayerCharacter;
+                    var secondBoss = (Boss)GetLocation(5).Character;
                     Console.WriteLine($"Un jefe esta frente a ti!!!\nEs el gran {secondBoss.Name}.");
-                    secondBoss.ShowBossPoints();
+                    secondBoss.ShowPoints();
                     Thread.Sleep(_sleep);
                     _player.ShowInformation(PlayerConstants.DisplayItems, PlayerConstants.DisplayLifeAndAttackPoints, PlayerConstants.ContinueWithGame);
                     item = _player.SelectItemToFight();
                     _player.IncreasePower(item);
-                    _player.ShowPlayerPoints();
+                    _player.ShowPoints();
                     Thread.Sleep(_sleep);
                     while (secondBoss.LifePoints > 0 && _player.LifePoints > 0)
                     {
@@ -304,8 +306,8 @@ internal class GameEngine
                     if (_player.LifePoints > 0)
                     {
                         Console.WriteLine($"Felicidades!!!, lograste vencer a {secondBoss.Name}.");
-                        Console.WriteLine($"Ahora puedes convertirte en un {GetLocation(5).NonPlayerCharacter.Item.Name}");
-                        _player.AddItem(GetLocation(5).NonPlayerCharacter.Item);
+                        Console.WriteLine($"Ahora puedes convertirte en un {GetLocation(5).Question.Item.Name}");
+                        _player.AddItem(GetLocation(5).Question.Item);
                         _player.LifePoints += recoverLifePoints;
                         Thread.Sleep(_sleep);
                         ContinueWithGame();
@@ -323,12 +325,12 @@ internal class GameEngine
 
                 case 7:
                     GetLocation(6).ShowLocationInformation();
-                    flag = QuestionHandler.AskQuestionWithNoConfirmation(GetLocation(6).NonPlayerCharacter.Name);
+                    flag = QuestionHandler.AskQuestionWithNoConfirmation(GetLocation(6).Question.Name);
                     if (flag)
                     {
                         _player.IncreaseLifePoints(PlayerConstants.LifePointsByQuestion);
-                        _player.AddItem(GetLocation(6).NonPlayerCharacter.Item);
-                        Console.WriteLine($"Felicidades, podras usar el {GetLocation(6).NonPlayerCharacter.Item.Name}");
+                        _player.AddItem(GetLocation(6).Question.Item);
+                        Console.WriteLine($"Felicidades, podras usar el {GetLocation(6).Question.Item.Name}");
                     }
                     else
                     {
@@ -336,7 +338,7 @@ internal class GameEngine
                     }
 
                     level++;
-                    _player.ShowPlayerPoints();
+                    _player.ShowPoints();
                     Thread.Sleep(_sleep);
                     ContinueWithGame();
                     Console.Clear();
@@ -345,13 +347,13 @@ internal class GameEngine
                 case 8:
                     GetLocation(7).ShowLocationInformation();
                     string[] options3 = { "Mark", "Miguel", "Kenny" };
-                    answer = QuestionHandler.PromptQuestionWithSimpleSelect(GetLocation(7).NonPlayerCharacter.Name, options3);
+                    answer = QuestionHandler.PromptQuestionWithSimpleSelect(GetLocation(7).Question.Name, options3);
                     if (answer.Equals(QuestionConstants.Answer7))
                     {
                         _player.IncreaseLifePoints(PlayerConstants.LifePointsByQuestion);
-                        _player.AddItem(GetLocation(7).NonPlayerCharacter.Item);
+                        _player.AddItem(GetLocation(7).Question.Item);
                         Console.WriteLine("Felicidades!, la respuesta es correcta.");
-                        Console.WriteLine($"Ahora podras hacer la {GetLocation(7).NonPlayerCharacter.Item.Name}");
+                        Console.WriteLine($"Ahora podras hacer la {GetLocation(7).Question.Item.Name}");
                     }
                     else
                     {
@@ -359,7 +361,7 @@ internal class GameEngine
                     }
 
                     level++;
-                    _player.ShowPlayerPoints();
+                    _player.ShowPoints();
                     Thread.Sleep(_sleep);
                     ContinueWithGame();
                     Console.Clear();
@@ -368,13 +370,13 @@ internal class GameEngine
                 case 9:
                     GetLocation(8).ShowLocationInformation();
                     string[] options4 = { "Gohan", "Vegeta", "Goku" };
-                    answer = QuestionHandler.PromptQuestionWithSimpleSelect(GetLocation(8).NonPlayerCharacter.Name, options4);
+                    answer = QuestionHandler.PromptQuestionWithSimpleSelect(GetLocation(8).Question.Name, options4);
                     if (answer.Equals(QuestionConstants.Answer9))
                     {
                         _player.IncreaseLifePoints(PlayerConstants.LifePointsByQuestion);
-                        _player.AddItem(GetLocation(8).NonPlayerCharacter.Item);
+                        _player.AddItem(GetLocation(8).Question.Item);
                         Console.WriteLine("Felicidades!, la respuesta es correcta.");
-                        Console.WriteLine($"Ahora podras convertirte en un {GetLocation(8).NonPlayerCharacter.Item.Name}");
+                        Console.WriteLine($"Ahora podras convertirte en un {GetLocation(8).Question.Item.Name}");
                     }
                     else
                     {
@@ -382,7 +384,7 @@ internal class GameEngine
                     }
 
                     level++;
-                    _player.ShowPlayerPoints();
+                    _player.ShowPoints();
                     Thread.Sleep(_sleep);
                     ContinueWithGame();
                     Console.Clear();
@@ -390,14 +392,14 @@ internal class GameEngine
 
                 case 10:
                     GetLocation(9).ShowLocationInformation();
-                    var thirdBoss = (Boss)GetLocation(9).NonPlayerCharacter;
+                    var thirdBoss = (Boss)GetLocation(9).Character;
                     Console.WriteLine($"Un jefe esta frente a ti!!!\nEs el poderoso {thirdBoss.Name}.");
-                    thirdBoss.ShowBossPoints();
+                    thirdBoss.ShowPoints();
                     Thread.Sleep(_sleep);
                     _player.ShowInformation(PlayerConstants.DisplayItems, PlayerConstants.DisplayLifeAndAttackPoints, PlayerConstants.ContinueWithGame);
                     item = _player.SelectItemToFight();
                     _player.IncreasePower(item);
-                    _player.ShowPlayerPoints();
+                    _player.ShowPoints();
                     Thread.Sleep(_sleep);
                     while (thirdBoss.LifePoints > 0 && _player.LifePoints > 0)
                     {
@@ -423,10 +425,10 @@ internal class GameEngine
 
                     if (_player.LifePoints > 0)
                     {
-                        _player.AddItem(GetLocation(9).NonPlayerCharacter.Item);
+                        _player.AddItem(GetLocation(9).Question.Item);
                         _player.LifePoints += recoverLifePoints;
                         Console.WriteLine($"{GameConstants.FinalPartFirstSentence} {thirdBoss.Name}.");
-                        Console.WriteLine($"{GameConstants.FinalPartSecondSentence} {GetLocation(9).NonPlayerCharacter.Item.Name}, {GameConstants.FinalPartThirdSentence}");
+                        Console.WriteLine($"{GameConstants.FinalPartSecondSentence} {GetLocation(9).Question.Item.Name}, {GameConstants.FinalPartThirdSentence}");
                         Thread.Sleep(_sleep);
                         ContinueWithGame();
                         Console.Clear();
@@ -458,9 +460,15 @@ internal class GameEngine
         }
     }
 
-    private void BuildLevelWithObstruction(string name, string description, NonPlayerCharacter obstruction, int position)
+    private void BuildLevelWithBoss(string name, string description, ICharacter character, int position)
     {
-        Location location = new Location(name, description, obstruction);
+        Location location = new Location(name, description, character);
+        _locationsList.Add(location);
+    }
+
+    private void BuildLevelWithQuestion(string name, string description, IQuestion question, int position)
+    {
+        Location location = new Location(name, description, question);
         _locationsList.Add(location);
     }
 

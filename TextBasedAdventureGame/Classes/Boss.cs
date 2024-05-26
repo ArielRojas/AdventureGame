@@ -1,20 +1,26 @@
 ﻿namespace TextBasedAdventureGame.Classes;
 
 using Spectre.Console;
+using TextBasedAdventureGame.Interfaces;
 
-internal class Boss : NonPlayerCharacter
+internal class Boss : ICharacter
 {
+    private string _name;
+    private string _description;
+    private Item _item;
     private int _lifePoints;
     private int _attackPoints;
 
-    public Boss(string name, string description, Item item, int lifePoints, int attackPoints) : base(name, description, item)
+    public Boss(string name, string description, Item item, int lifePoints, int attackPoints)
     {
-        this.name = name;
-        this.description = description;
-        this.item = item;
+        _name = name;
+        _description = description;
+        _item = item;
         _lifePoints = lifePoints;
         _attackPoints = attackPoints;
     }
+
+    public string Name => _name;
 
     public int LifePoints
     {
@@ -26,21 +32,21 @@ internal class Boss : NonPlayerCharacter
         get => _attackPoints;
     }
 
-    public override string ShowNonPlayerCharacter()
-    {
-        return base.ShowNonPlayerCharacter() + $"\nLife Points: {LifePoints}";
-    }
-
     public int ReceiveAttack(int attack)
     {
         return _lifePoints -= attack;
     }
 
-    public void ShowBossPoints()
+    public void ShowPoints()
     {
         var pointsTable = new Table();
-        pointsTable.AddColumn($"[red]Puntos de vida de {name}: {_lifePoints}[/]");
-        pointsTable.AddRow($"[red]Puntos de ataque de {name}: {_attackPoints}[/]");
+        pointsTable.AddColumn($"[red]Puntos de vida de {_name}: {_lifePoints}[/]");
+        pointsTable.AddRow($"[red]Puntos de ataque de {_name}: {_attackPoints}[/]");
         AnsiConsole.Write(pointsTable);
+    }
+
+    public void InteractInGame()
+    {
+        throw new NotImplementedException();
     }
 }
