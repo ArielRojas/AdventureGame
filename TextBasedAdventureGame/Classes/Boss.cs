@@ -1,6 +1,7 @@
 ﻿namespace TextBasedAdventureGame.Classes;
 
 using Spectre.Console;
+using TextBasedAdventureGame.Constants;
 using TextBasedAdventureGame.Interfaces;
 
 internal class Boss : ICharacter
@@ -32,6 +33,8 @@ internal class Boss : ICharacter
         get => _attackPoints;
     }
 
+    public Item Item => _item;
+
     public int ReceiveAttack(int attack)
     {
         return _lifePoints -= attack;
@@ -45,8 +48,18 @@ internal class Boss : ICharacter
         AnsiConsole.Write(pointsTable);
     }
 
-    public void InteractInGame()
+    public void InitialInteraction()
     {
-        throw new NotImplementedException();
+        Console.WriteLine($"Un jefe esta frente a ti!!!\nEs {Name}.");
+        ShowPoints();
+    }
+
+    public void InteractInGame(ICharacter character)
+    {
+        Console.WriteLine($"Preparate para el ataque de {Name}");
+        Thread.Sleep(AnimationStrings.timeToFight);
+        Console.WriteLine($"{AnimationStrings.animation3}");
+        Thread.Sleep(AnimationStrings.timeToFight);
+        character.ReceiveAttack(AttackPoints);
     }
 }

@@ -1,12 +1,17 @@
-﻿namespace TextBasedAdventureGame.Interfaces;
+﻿using TextBasedAdventureGame.Classes;
+
+namespace TextBasedAdventureGame.Interfaces;
 
 internal interface ICharacter
 {
     string Name { get; }
+    Item Item { get; }
 
     int ReceiveAttack(int attack);
 
     void ShowPoints();
 
-    void InteractInGame();
+    void InitialInteraction();
+
+    void InteractInGame(ICharacter character);
 }

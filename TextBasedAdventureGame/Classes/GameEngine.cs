@@ -23,12 +23,12 @@ internal class GameEngine
     {
         // Level1
         Item item = new Item("Agua Ultrasagrada", ItemType.SANITY, "El agua ultrasagrada es un líquido diferente al agua corriente y sirve para incrementar la fuerza y la agilidad.");
-        QuestionCharacter questionCharacter = new QuestionCharacter(QuestionConstants.Question1, "", item);
-        BuildLevelWithQuestion("Level 1", "Prepara tu camino", questionCharacter, 0);
+        YesNoCharacter yesNoCharacter = new YesNoCharacter(QuestionConstants.Question1, "", item, QuestionConstants.Answer1);
+        BuildLevelWithQuestion("Level 1", "Prepara tu camino", yesNoCharacter, 0);
 
         // Level2
         Item item2 = new Item("KAME HAME HA", ItemType.POWER, "gran cantidad de energía en las manos");
-        QuestionCharacter questionCharacter2 = new QuestionCharacter(QuestionConstants.Question2, "", item2);
+        QuestionCharacter questionCharacter2 = new QuestionCharacter(QuestionConstants.Question2, "", item2, QuestionConstants.Answer2);
         BuildLevelWithQuestion("Level 2", "Siente el poder en tus manos", questionCharacter2, 1);
 
         // Level3
@@ -38,12 +38,12 @@ internal class GameEngine
 
         // Level4
         Item item4 = new Item("Nube Voladora", ItemType.VELOCITY, "es un objeto mágico que sirve para transportar al guerrero que lo utiliza, siempre y cuando sea de corazón puro y mente limpia.");
-        QuestionCharacter questionCharacter4 = new QuestionCharacter(QuestionConstants.Question3, "", item4);
+        QuestionCharacter questionCharacter4 = new QuestionCharacter(QuestionConstants.Question3, "", item4, QuestionConstants.Answer3);
         BuildLevelWithQuestion("Level 4", "Vuela alto a una gran velocidad", questionCharacter4, 3);
 
         // Level5
         Item item5 = new Item("Kaioken", ItemType.VELOCITY, "es una técnica poderosa que permite a los guerreros aumentar su fuerza y velocidad temporalmente.");
-        QuestionCharacter questionCharacter5 = new QuestionCharacter(QuestionConstants.Question5, "", item5);
+        QuestionCharacter questionCharacter5 = new QuestionCharacter(QuestionConstants.Question5, "", item5, QuestionConstants.Answer5);
         BuildLevelWithQuestion("Level 5", "Aumenta tu poder por 10", questionCharacter5, 4);
 
         // Level6
@@ -53,17 +53,17 @@ internal class GameEngine
 
         // Level7
         Item item7 = new Item("Resplandor Final", ItemType.POWER, "El ataque definitivo de Vegeta");
-        QuestionCharacter questionCharacter7 = new QuestionCharacter(QuestionConstants.Question6, "", item7);
+        QuestionCharacter questionCharacter7 = new QuestionCharacter(QuestionConstants.Question6, "", item7, QuestionConstants.Answer6);
         BuildLevelWithQuestion("Level 7", "Destruccion Masiva", questionCharacter7, 6);
 
         // Level8
         Item item8 = new Item("Genki-dama", ItemType.POWER, "Es una técnica de combate de naturaleza ofensiva que requiere una parte de la energía de todas las criaturas");
-        QuestionCharacter questionCharacter8 = new QuestionCharacter(QuestionConstants.Question7, "", item8);
+        QuestionCharacter questionCharacter8 = new QuestionCharacter(QuestionConstants.Question7, "", item8, QuestionConstants.Answer7);
         BuildLevelWithQuestion("Level 8", "Siente el poder de todo un planeta", questionCharacter8, 7);
 
         // Level9
         Item item9 = new Item("Super Saiyajin Fase 2", ItemType.POWER, "Es el segundo nivel que puede alcanzar un saiyajin");
-        QuestionCharacter questionCharacter9 = new QuestionCharacter(QuestionConstants.Question9, "", item9);
+        QuestionCharacter questionCharacter9 = new QuestionCharacter(QuestionConstants.Question9, "", item9, QuestionConstants.Answer9);
         BuildLevelWithQuestion("Level 9", "Un nuevo poder ha despertado", questionCharacter9, 8);
 
         // Level10
@@ -141,7 +141,7 @@ internal class GameEngine
                     }
                     else
                     {
-                        Console.WriteLine($"Incorrecto, {QuestionConstants.Answer1}");
+                        Console.WriteLine($"Incorrecto, {GetLocation(0).Question.Answer}");
                     }
 
                     level++;
@@ -155,7 +155,7 @@ internal class GameEngine
                     GetLocation(1).ShowLocationInformation();
                     string[] options = { "Oolong", "Puar", "Ten Ten" };
                     answer = QuestionHandler.PromptQuestionWithSimpleSelect(GetLocation(1).Question.Name, options);
-                    if (answer.Equals(QuestionConstants.Answer2))
+                    if (answer.Equals(GetLocation(1).Question.Answer))
                     {
                         _player.IncreaseLifePoints(PlayerConstants.LifePointsByQuestion);
                         Console.WriteLine("Felicidades!, la respuesta es correcta.");
@@ -164,7 +164,7 @@ internal class GameEngine
                     }
                     else
                     {
-                        Console.WriteLine($"Mala respuesta, su mejor amigo es {QuestionConstants.Answer2}");
+                        Console.WriteLine($"Mala respuesta, su mejor amigo es {GetLocation(1).Question.Answer}");
                     }
 
                     level++;
@@ -177,41 +177,26 @@ internal class GameEngine
                 case 3:
                     GetLocation(2).ShowLocationInformation();
                     var firstBoss = (Boss)GetLocation(2).Character;
-                    Console.WriteLine($"Un jefe esta frente a ti!!!\nEs {firstBoss.Name}.");
-                    firstBoss.ShowPoints();
+                    firstBoss.InitialInteraction();
                     Thread.Sleep(_sleep);
-                    _player.ShowInformation(PlayerConstants.DisplayItems, PlayerConstants.DisplayLifeAndAttackPoints, PlayerConstants.ContinueWithGame);
-                    item = _player.SelectItemToFight();
-                    _player.IncreasePower(item);
-                    _player.ShowPoints();
+                    _player.InitialInteraction();
                     Thread.Sleep(_sleep);
                     while (firstBoss.LifePoints > 0 && _player.LifePoints > 0)
                     {
-                        Console.WriteLine("Ataca con todo tu poder!!!");
-                        Console.Write($"{AnimationStrings.animation1}");
-                        Thread.Sleep(_timeToFight);
-                        Console.WriteLine($"{AnimationStrings.animation2}");
-                        Thread.Sleep(_timeToFight);
-                        Console.WriteLine($"{AnimationStrings.animation3}");
-                        Thread.Sleep(_timeToFight);
-                        firstBoss.ReceiveAttack(_player.AttackPoints);
+                        _player.InteractInGame(firstBoss);
                         if (firstBoss.LifePoints <= 0)
                         {
                             break;
                         }
-                        Console.WriteLine($"Preparate para el ataque de {firstBoss.Name}");
-                        Thread.Sleep(_timeToFight);
-                        Console.WriteLine($"{AnimationStrings.animation3}");
-                        Thread.Sleep(_timeToFight);
-                        _player.ReceiveAttack(firstBoss.AttackPoints);
+                        firstBoss.InteractInGame(_player);
                         recoverLifePoints += firstBoss.AttackPoints;
                     }
 
                     if (_player.LifePoints > 0)
                     {
                         Console.WriteLine($"Felicidades!!!, lograste vencer a {firstBoss.Name}.");
-                        Console.WriteLine($"Ganaste las {GetLocation(2).Question.Item.Name}");
-                        _player.AddItem(GetLocation(2).Question.Item);
+                        Console.WriteLine($"Ganaste las {GetLocation(2).Character.Item.Name}");
+                        _player.AddItem(GetLocation(2).Character.Item);
                         _player.LifePoints += recoverLifePoints;
                         Thread.Sleep(_sleep);
                         ContinueWithGame();
@@ -237,7 +222,7 @@ internal class GameEngine
                     }
                     else
                     {
-                        Console.WriteLine($"Incorrecto, {QuestionConstants.Answer3}");
+                        Console.WriteLine($"Incorrecto, {GetLocation(3).Question.Answer}");
                     }
 
                     level++;
@@ -251,7 +236,7 @@ internal class GameEngine
                     GetLocation(4).ShowLocationInformation();
                     string[] options2 = { "Resplandor Final", "Genki-dama", "Makankosappo" };
                     answer = QuestionHandler.PromptQuestionWithSimpleSelect(GetLocation(4).Question.Name, options2);
-                    if (answer.Equals(QuestionConstants.Answer5))
+                    if (answer.Equals(GetLocation(4).Question.Answer))
                     {
                         _player.IncreaseLifePoints(PlayerConstants.LifePointsByQuestion);
                         _player.AddItem(GetLocation(4).Question.Item);
@@ -260,7 +245,7 @@ internal class GameEngine
                     }
                     else
                     {
-                        Console.WriteLine($"Mala respuesta, La tecnica de Piccolo es {QuestionConstants.Answer5}");
+                        Console.WriteLine($"Mala respuesta, La tecnica de Piccolo es {GetLocation(4).Question.Answer}");
                     }
 
                     level++;
@@ -273,41 +258,26 @@ internal class GameEngine
                 case 6:
                     GetLocation(5).ShowLocationInformation();
                     var secondBoss = (Boss)GetLocation(5).Character;
-                    Console.WriteLine($"Un jefe esta frente a ti!!!\nEs el gran {secondBoss.Name}.");
-                    secondBoss.ShowPoints();
+                    secondBoss.InitialInteraction();
                     Thread.Sleep(_sleep);
-                    _player.ShowInformation(PlayerConstants.DisplayItems, PlayerConstants.DisplayLifeAndAttackPoints, PlayerConstants.ContinueWithGame);
-                    item = _player.SelectItemToFight();
-                    _player.IncreasePower(item);
-                    _player.ShowPoints();
+                    _player.InitialInteraction();
                     Thread.Sleep(_sleep);
                     while (secondBoss.LifePoints > 0 && _player.LifePoints > 0)
                     {
-                        Console.WriteLine("Ataca con todo tu poder!!!");
-                        Console.Write($"{AnimationStrings.animation1}");
-                        Thread.Sleep(_timeToFight);
-                        Console.WriteLine($"{AnimationStrings.animation2}");
-                        Thread.Sleep(_timeToFight);
-                        Console.WriteLine($"{AnimationStrings.animation3}");
-                        Thread.Sleep(_timeToFight);
-                        secondBoss.ReceiveAttack(_player.AttackPoints);
+                        _player.InteractInGame(secondBoss);
                         if (secondBoss.LifePoints <= 0)
                         {
                             break;
                         }
-                        Console.WriteLine($"Preparate para el ataque de {secondBoss.Name}");
-                        Thread.Sleep(_timeToFight);
-                        Console.WriteLine($"{AnimationStrings.animation3}");
-                        Thread.Sleep(_timeToFight);
-                        _player.ReceiveAttack(secondBoss.AttackPoints);
+                        secondBoss.InteractInGame(_player);
                         recoverLifePoints += secondBoss.AttackPoints;
                     }
 
                     if (_player.LifePoints > 0)
                     {
                         Console.WriteLine($"Felicidades!!!, lograste vencer a {secondBoss.Name}.");
-                        Console.WriteLine($"Ahora puedes convertirte en un {GetLocation(5).Question.Item.Name}");
-                        _player.AddItem(GetLocation(5).Question.Item);
+                        Console.WriteLine($"Ahora puedes convertirte en un {GetLocation(5).Character.Item.Name}");
+                        _player.AddItem(GetLocation(5).Character.Item);
                         _player.LifePoints += recoverLifePoints;
                         Thread.Sleep(_sleep);
                         ContinueWithGame();
@@ -334,7 +304,7 @@ internal class GameEngine
                     }
                     else
                     {
-                        Console.WriteLine($"Incorrecto, {QuestionConstants.Answer6}");
+                        Console.WriteLine($"Incorrecto, {GetLocation(6).Question.Answer}");
                     }
 
                     level++;
@@ -348,7 +318,7 @@ internal class GameEngine
                     GetLocation(7).ShowLocationInformation();
                     string[] options3 = { "Mark", "Miguel", "Kenny" };
                     answer = QuestionHandler.PromptQuestionWithSimpleSelect(GetLocation(7).Question.Name, options3);
-                    if (answer.Equals(QuestionConstants.Answer7))
+                    if (answer.Equals(GetLocation(7).Question.Answer))
                     {
                         _player.IncreaseLifePoints(PlayerConstants.LifePointsByQuestion);
                         _player.AddItem(GetLocation(7).Question.Item);
@@ -357,7 +327,7 @@ internal class GameEngine
                     }
                     else
                     {
-                        Console.WriteLine($"Mala respuesta, Su verdadero nombre es {QuestionConstants.Answer7}");
+                        Console.WriteLine($"Mala respuesta, Su verdadero nombre es {GetLocation(7).Question.Answer}");
                     }
 
                     level++;
@@ -371,7 +341,7 @@ internal class GameEngine
                     GetLocation(8).ShowLocationInformation();
                     string[] options4 = { "Gohan", "Vegeta", "Goku" };
                     answer = QuestionHandler.PromptQuestionWithSimpleSelect(GetLocation(8).Question.Name, options4);
-                    if (answer.Equals(QuestionConstants.Answer9))
+                    if (answer.Equals(GetLocation(8).Question.Answer))
                     {
                         _player.IncreaseLifePoints(PlayerConstants.LifePointsByQuestion);
                         _player.AddItem(GetLocation(8).Question.Item);
@@ -380,7 +350,7 @@ internal class GameEngine
                     }
                     else
                     {
-                        Console.WriteLine($"Mala respuesta, Fue {QuestionConstants.Answer9}");
+                        Console.WriteLine($"Mala respuesta, Fue {GetLocation(8).Question.Answer}");
                     }
 
                     level++;
@@ -393,42 +363,27 @@ internal class GameEngine
                 case 10:
                     GetLocation(9).ShowLocationInformation();
                     var thirdBoss = (Boss)GetLocation(9).Character;
-                    Console.WriteLine($"Un jefe esta frente a ti!!!\nEs el poderoso {thirdBoss.Name}.");
-                    thirdBoss.ShowPoints();
+                    thirdBoss.InitialInteraction();
                     Thread.Sleep(_sleep);
-                    _player.ShowInformation(PlayerConstants.DisplayItems, PlayerConstants.DisplayLifeAndAttackPoints, PlayerConstants.ContinueWithGame);
-                    item = _player.SelectItemToFight();
-                    _player.IncreasePower(item);
-                    _player.ShowPoints();
+                    _player.InitialInteraction();
                     Thread.Sleep(_sleep);
                     while (thirdBoss.LifePoints > 0 && _player.LifePoints > 0)
                     {
-                        Console.WriteLine("Ataca con todo tu poder!!!");
-                        Console.Write($"{AnimationStrings.animation1}");
-                        Thread.Sleep(_timeToFight);
-                        Console.WriteLine($"{AnimationStrings.animation2}");
-                        Thread.Sleep(_timeToFight);
-                        Console.WriteLine($"{AnimationStrings.animation3}");
-                        Thread.Sleep(_timeToFight);
-                        thirdBoss.ReceiveAttack(_player.AttackPoints);
+                        _player.InteractInGame(thirdBoss);
                         if (thirdBoss.LifePoints <= 0)
                         {
                             break;
                         }
-                        Console.WriteLine($"Preparate para el ataque de {thirdBoss.Name}");
-                        Thread.Sleep(_timeToFight);
-                        Console.WriteLine($"{AnimationStrings.animation3}");
-                        Thread.Sleep(_timeToFight);
-                        _player.ReceiveAttack(thirdBoss.AttackPoints);
+                        thirdBoss.InteractInGame(_player);
                         recoverLifePoints += thirdBoss.AttackPoints;
                     }
 
                     if (_player.LifePoints > 0)
                     {
-                        _player.AddItem(GetLocation(9).Question.Item);
+                        _player.AddItem(GetLocation(9).Character.Item);
                         _player.LifePoints += recoverLifePoints;
                         Console.WriteLine($"{GameConstants.FinalPartFirstSentence} {thirdBoss.Name}.");
-                        Console.WriteLine($"{GameConstants.FinalPartSecondSentence} {GetLocation(9).Question.Item.Name}, {GameConstants.FinalPartThirdSentence}");
+                        Console.WriteLine($"{GameConstants.FinalPartSecondSentence} {GetLocation(9).Character.Item.Name}, {GameConstants.FinalPartThirdSentence}");
                         Thread.Sleep(_sleep);
                         ContinueWithGame();
                         Console.Clear();

@@ -74,4 +74,7 @@ ________                                       __________        .__  .__      _
         \/           \//_____/             \/          \/      \/                    \/     \/      \/     \/ 
 
 ";
+
+    public static readonly TimeSpan sleep = TimeSpan.FromMilliseconds(5000);
+    public static readonly TimeSpan timeToFight = TimeSpan.FromMilliseconds(2000);
 }

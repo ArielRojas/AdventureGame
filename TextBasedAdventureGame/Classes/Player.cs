@@ -30,6 +30,8 @@ internal class Player : ICharacter
 
     public string Name => _name;
 
+    public Item Item => throw new NotImplementedException();
+
     public int ReceiveAttack(int attack)
     {
         return _lifePoints -= attack;
@@ -78,9 +80,23 @@ internal class Player : ICharacter
         AnsiConsole.Write(pointsTable);
     }
 
-    public void InteractInGame()
+    public void InitialInteraction()
     {
-        throw new NotImplementedException();
+        ShowInformation(PlayerConstants.DisplayItems, PlayerConstants.DisplayLifeAndAttackPoints, PlayerConstants.ContinueWithGame);
+        IncreasePower(SelectItemToFight());
+        ShowPoints();
+    }
+
+    public void InteractInGame(ICharacter character)
+    {
+        Console.WriteLine("Ataca con todo tu poder!!!");
+        Console.Write($"{AnimationStrings.animation1}");
+        Thread.Sleep(AnimationStrings.timeToFight);
+        Console.WriteLine($"{AnimationStrings.animation2}");
+        Thread.Sleep(AnimationStrings.timeToFight);
+        Console.WriteLine($"{AnimationStrings.animation3}");
+        Thread.Sleep(AnimationStrings.timeToFight);
+        character.ReceiveAttack(AttackPoints);
     }
 
     public void IncreasePower(Item item)
