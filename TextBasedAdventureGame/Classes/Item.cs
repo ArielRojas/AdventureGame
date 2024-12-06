@@ -1,4 +1,6 @@
-﻿namespace TextBasedAdventureGame;
+﻿using TextBasedAdventureGame.Enums;
+
+namespace TextBasedAdventureGame.Classes;
 
 public class Item
 {
